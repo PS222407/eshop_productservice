@@ -1,0 +1,6 @@
+docker network create eshop-network
+
+docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.0
+
+docker build -t eshop:0.1 -f .\EShop\Dockerfile .
+docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d eshop:0.1
