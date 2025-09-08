@@ -1,3 +1,6 @@
+# -----------------------------
+# Product Service
+# -----------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,3 +35,70 @@ spec:
       port: 8080
       targetPort: 8080
   type: ClusterIP
+
+## -----------------------------
+## Order Service (placeholder)
+## -----------------------------
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: eshop-orderservice
+#  labels:
+#    app: eshop-orderservice
+#spec:
+#  replicas: 2
+#  selector:
+#    matchLabels:
+#      app: eshop-orderservice
+#  template:
+#    metadata:
+#      labels:
+#        app: eshop-orderservice
+#    spec:
+#      containers:
+#        - name: eshop-orderservice
+#          image: jensr22/eshop_orderservice:latest
+#          ports:
+#            - containerPort: 8080
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: orderservice
+#spec:
+#  selector:
+#    app: eshop-orderservice
+#  ports:
+#    - protocol: TCP
+#      port: 80
+#      targetPort: 8080
+#  type: ClusterIP
+
+# -----------------------------
+# Ingress
+# -----------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eshop-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - host: eshop.local
+      http:
+        paths:
+          - path: /api/products(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: productservice
+                port:
+                  number: 80
+#          - path: /api/orders(/|$)(.*)
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: orderservice
+#                port:
+#                  number: 80
