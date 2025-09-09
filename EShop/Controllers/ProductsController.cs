@@ -10,22 +10,23 @@ public class ProductsController : ControllerBase
 {
     private readonly ProductsService _productsService;
 
-    public ProductsController(ProductsService productsService) =>
+    public ProductsController(ProductsService productsService)
+    {
         _productsService = productsService;
+    }
 
     [HttpGet]
-    public async Task<List<Product>> Get() =>
-        await _productsService.GetAsync();
+    public async Task<List<Product>> Get()
+    {
+        return await _productsService.GetAsync();
+    }
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Product>> Get(string id)
     {
         var book = await _productsService.GetAsync(id);
 
-        if (book is null)
-        {
-            return NotFound();
-        }
+        if (book is null) return NotFound();
 
         return book;
     }
@@ -43,10 +44,7 @@ public class ProductsController : ControllerBase
     {
         var book = await _productsService.GetAsync(id);
 
-        if (book is null)
-        {
-            return NotFound();
-        }
+        if (book is null) return NotFound();
 
         updatedBook.Id = book.Id;
 
@@ -60,10 +58,7 @@ public class ProductsController : ControllerBase
     {
         var book = await _productsService.GetAsync(id);
 
-        if (book is null)
-        {
-            return NotFound();
-        }
+        if (book is null) return NotFound();
 
         await _productsService.RemoveAsync(id);
 
