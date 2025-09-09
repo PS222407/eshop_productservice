@@ -18,8 +18,7 @@ builder.Services.Configure<EShopDatabaseSettings>(
 builder.Services.AddSingleton<ProductsService>();
 
 builder.Services.AddControllers()
-    .AddJsonOptions(
-        options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -29,17 +28,14 @@ var app = builder.Build();
 // Add swagger endpoint
 // if (app.Environment.IsDevelopment())
 // {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-Shop API V1");
-    });
+app.UseSwagger();
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-Shop API V1"); });
 // }
 
 // Configure the HTTP request pipeline.
 // if (app.Environment.IsDevelopment())
 // {
-    app.MapOpenApi();
+app.MapOpenApi();
 // }
 
 app.UseHttpsRedirection();
