@@ -1,3 +1,8 @@
+# Setup For Development
+git clone git@github.com:PS222407/eshop_productservice.git  
+cd cd eshop_productservice/  
+docker compose up -d  
+
 # Setup For Production
 git clone git@github.com:PS222407/eshop_productservice.git  
 cd cd eshop_productservice/  

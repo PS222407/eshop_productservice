@@ -7,7 +7,7 @@ public class ProducerController : Controller
 {
     private readonly ProducerConfig _config = new()
     {
-        BootstrapServers = "kafka:9092"
+        BootstrapServers = "localhost:9094"
     };
     
     [HttpPost("send")]
