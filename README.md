@@ -17,8 +17,14 @@ docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d esh
 Now you can access http://localhost:8080/swagger/index.html  
 
 # k8s
+Start kubernetes (if minikube is used):  
+minikube start  
+
 kubectl apply -f k8s.yml  
 kubectl get pods  
 kubectl get svc eshop-productservice  
 
 minikube service eshop-productservice
+
+View kubernetes dashboard (if minikube is used):  
+minikube dashboard  
