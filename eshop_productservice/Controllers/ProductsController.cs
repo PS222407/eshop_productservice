@@ -1,8 +1,8 @@
-using EShop.Models;
-using EShop.Services;
+using eshop_productservice.Models;
+using eshop_productservice.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EShop.Controllers;
+namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

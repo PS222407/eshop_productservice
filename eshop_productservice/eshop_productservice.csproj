@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <AssemblyName>eshop_productservice</AssemblyName>
+        <RootNamespace>eshop_productservice</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

@@ -1,5 +1,5 @@
-using EShop.Models;
-using EShop.Services;
+using eshop_productservice.Models;
+using eshop_productservice.Services;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

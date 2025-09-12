@@ -1,8 +1,8 @@
-using EShop.Models;
+using eshop_productservice.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace EShop.Services;
+namespace eshop_productservice.Services;
 
 public class ProductsService
 {

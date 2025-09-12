@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop", "EShop\EShop.csproj", "{41856197-6FAD-47F4-9FCA-D61E9C4E52CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eshop_productservice", "eshop_productservice\eshop_productservice.csproj", "{41856197-6FAD-47F4-9FCA-D61E9C4E52CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C5EE8012-D9C8-497E-9CCE-57B184AF8086}"
 EndProject
