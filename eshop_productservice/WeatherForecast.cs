@@ -1,4 +1,4 @@
-namespace EShop;
+namespace eshop_productservice;
 
 public class WeatherForecast
 {

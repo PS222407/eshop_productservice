@@ -1,7 +1,7 @@
 using Confluent.Kafka;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EShop.Controllers;
+namespace eshop_productservice.Controllers;
 
 public class ProducerController : Controller
 {

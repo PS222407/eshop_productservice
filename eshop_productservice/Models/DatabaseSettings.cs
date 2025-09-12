@@ -1,6 +1,6 @@
-namespace EShop.Models;
+namespace eshop_productservice.Models;
 
-public class EShopDatabaseSettings
+public class DatabaseSettings
 {
     public string ConnectionString { get; set; } = null!;
 

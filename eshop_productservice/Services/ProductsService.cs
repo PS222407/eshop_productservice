@@ -1,15 +1,15 @@
-using EShop.Models;
+using eshop_productservice.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace EShop.Services;
+namespace eshop_productservice.Services;
 
 public class ProductsService
 {
     private readonly IMongoCollection<Product> _productsCollection;
 
     public ProductsService(
-        IOptions<EShopDatabaseSettings> eShopDatabaseSettings)
+        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductsService> logger)
     {
         var mongoClient = new MongoClient(
             eShopDatabaseSettings.Value.ConnectionString);
@@ -19,6 +19,8 @@ public class ProductsService
 
         _productsCollection = mongoDatabase.GetCollection<Product>(
             eShopDatabaseSettings.Value.ProductsCollectionName);
+
+        logger.LogInformation("Products collection created LOGGING");
     }
 
     public async Task<List<Product>> GetAsync()
