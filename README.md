@@ -1,11 +1,13 @@
 # Setup For Development
+If you use windows, please run inside WSL  
 git clone git@github.com:PS222407/eshop_productservice.git  
-cd cd eshop_productservice/  
+cd eshop_productservice/  
 docker compose up -d  
+dotnet run  
 
 # Setup For Production
 git clone git@github.com:PS222407/eshop_productservice.git  
-cd cd eshop_productservice/  
+cd eshop_productservice/  
 
 docker network create eshop-network  
 
