@@ -33,38 +33,38 @@ dotnet ef database update
 
 # Setup For Production
 ```bash
-git clone git@github.com:PS222407/eshop_productservice.git  
+git clone git@github.com:PS222407/eshop_productservice.git
 ```
 ```bash
 cd eshop_productservice/  
 ```
 ```bash
-docker network create eshop-network  
+docker network create eshop-network
 ```
 ```bash
-docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.0  
+docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.0
 ```
 ```bash
-docker build -t eshop:0.1 -f ./eshop_productservice/Dockerfile .  
+docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
 ```bash
-docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d eshop:0.1  
+docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
 ```
 Now you can access http://localhost:8080/swagger/index.html  
 
 # k8s
 Start kubernetes (if minikube is used):  
 ```bash
-minikube start  
+minikube start
 ```
 ```bash
-kubectl apply -f k8s.yml  
+kubectl apply -f k8s.yml
 ```
 ```bash
-kubectl get pods  
+kubectl get pods
 ```
 ```bash
-kubectl get svc eshop-productservice  
+kubectl get svc eshop-productservice
 ```
 ```bash
 minikube service eshop-productservice
