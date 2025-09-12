@@ -1,5 +1,6 @@
 using eshop_productservice.Models;
 using eshop_productservice.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eshop_productservice.Controllers;
@@ -8,12 +9,14 @@ namespace eshop_productservice.Controllers;
 [Route("api/[controller]")]
 public class ProductsController(ProductsService productsService) : ControllerBase
 {
+    [Authorize]
     [HttpGet]
     public async Task<List<Product>> Get()
     {
         return await productsService.GetAsync();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Product>> Get(string id)
     {

@@ -19,7 +19,7 @@ public class ProductsService
 
         _productsCollection = mongoDatabase.GetCollection<Product>(
             eShopDatabaseSettings.Value.ProductsCollectionName);
-        
+
         logger.LogInformation("Products collection created LOGGING");
     }
 
