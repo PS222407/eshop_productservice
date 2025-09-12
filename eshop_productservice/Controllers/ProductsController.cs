@@ -6,25 +6,18 @@ namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController : ControllerBase
+public class ProductsController(ProductsService productsService) : ControllerBase
 {
-    private readonly ProductsService _productsService;
-
-    public ProductsController(ProductsService productsService)
-    {
-        _productsService = productsService;
-    }
-
     [HttpGet]
     public async Task<List<Product>> Get()
     {
-        return await _productsService.GetAsync();
+        return await productsService.GetAsync();
     }
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Product>> Get(string id)
     {
-        var book = await _productsService.GetAsync(id);
+        var book = await productsService.GetAsync(id);
 
         if (book is null) return NotFound();
 
@@ -34,7 +27,7 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Product newBook)
     {
-        await _productsService.CreateAsync(newBook);
+        await productsService.CreateAsync(newBook);
 
         return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
     }
@@ -42,13 +35,13 @@ public class ProductsController : ControllerBase
     [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> Update(string id, Product updatedBook)
     {
-        var book = await _productsService.GetAsync(id);
+        var book = await productsService.GetAsync(id);
 
         if (book is null) return NotFound();
 
         updatedBook.Id = book.Id;
 
-        await _productsService.UpdateAsync(id, updatedBook);
+        await productsService.UpdateAsync(id, updatedBook);
 
         return NoContent();
     }
@@ -56,11 +49,11 @@ public class ProductsController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var book = await _productsService.GetAsync(id);
+        var book = await productsService.GetAsync(id);
 
         if (book is null) return NotFound();
 
-        await _productsService.RemoveAsync(id);
+        await productsService.RemoveAsync(id);
 
         return NoContent();
     }
