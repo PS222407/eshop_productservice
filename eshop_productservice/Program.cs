@@ -8,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "E-Shop ProductService API", Description = "E-Shop ProductService API", Version = "v1" });
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+            { Title = "E-Shop ProductService API", Description = "E-Shop ProductService API", Version = "v1" });
 });
 
 // Add services to the container.
