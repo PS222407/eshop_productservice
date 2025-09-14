@@ -48,7 +48,7 @@ docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
 ```bash
-docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
+docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
 ```
 Now you can access http://localhost:8080/swagger/index.html  
 
