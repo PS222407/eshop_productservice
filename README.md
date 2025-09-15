@@ -48,11 +48,26 @@ docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
 ```bash
-docker run --name eshop --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
+docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
 ```
 Now you can access http://localhost:8080/swagger/index.html  
 
 # k8s
+Prerequisites
+```bash
+minikube addons enable ingress
+```
+Load local images in minikube that are not hosted in a registry  
+```bash
+docker save userservice:latest -o userservice.tar
+```
+```bash
+minikube image load userservice.tar
+```
+Ssh into minikube to check by running `docker image ls`
+```bash
+minikube ssh
+```
 Start kubernetes (if minikube is used):  
 ```bash
 minikube start
@@ -69,7 +84,11 @@ kubectl get svc eshop-productservice
 ```bash
 minikube service eshop-productservice
 ```
+View app in browser:
+```bash
+minikube ip
+```
 View kubernetes dashboard (if minikube is used):  
 ```bash
-minikube dashboard  
+minikube dashboard
 ```

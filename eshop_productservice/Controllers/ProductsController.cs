@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace eshop_productservice.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/productservice/v1/[controller]")]
 public class ProductsController(ProductsService productsService) : ControllerBase
 {
     [Authorize]

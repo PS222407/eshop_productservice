@@ -1,104 +1,124 @@
-# -----------------------------
-# Product Service
-# -----------------------------
+# -------------------------------
+# userservice Deployment
+# -------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eshop-productservice
-  labels:
-    app: eshop-productservice
+ name: userservice-deployment
+spec:
+ replicas: 2
+ selector:
+   matchLabels:
+     app: userservice
+ template:
+   metadata:
+     labels:
+       app: userservice
+   spec:
+     containers:
+     - name: userservice
+       image: jensr22/eshop_userservice:latest
+       imagePullPolicy: IfNotPresent
+       ports:
+       - containerPort: 8080
+---
+# -------------------------------
+# userservice Service
+# -------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+ name: userservice-service
+spec:
+ selector:
+   app: userservice
+ ports:
+   - protocol: TCP
+     port: 80
+     targetPort: 8080
+ type: ClusterIP
+
+---
+# -------------------------------
+# productservice Deployment
+# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: eshop-productservice
+      app: productservice
   template:
     metadata:
       labels:
-        app: eshop-productservice
+        app: productservice
     spec:
       containers:
-        - name: eshop-productservice
-          image: jensr22/eshop_productservice:latest
-          ports:
-            - containerPort: 8080
+      - name: productservice
+        image: jensr22/eshop_productservice:latest
+        ports:
+        - containerPort: 8080
 ---
+# -------------------------------
+# productservice Service
+# -------------------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: eshop-productservice
+  name: productservice-service
 spec:
   selector:
-    app: eshop-productservice
+    app: productservice
   ports:
     - protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
   type: ClusterIP
-
-## -----------------------------
-## Order Service (placeholder)
-## -----------------------------
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: eshop-orderservice
-#  labels:
-#    app: eshop-orderservice
-#spec:
-#  replicas: 2
-#  selector:
-#    matchLabels:
-#      app: eshop-orderservice
-#  template:
-#    metadata:
-#      labels:
-#        app: eshop-orderservice
-#    spec:
-#      containers:
-#        - name: eshop-orderservice
-#          image: jensr22/eshop_orderservice:latest
-#          ports:
-#            - containerPort: 8080
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: orderservice
-#spec:
-#  selector:
-#    app: eshop-orderservice
-#  ports:
-#    - protocol: TCP
-#      port: 80
-#      targetPort: 8080
-#  type: ClusterIP
-
-# -----------------------------
-# Ingress
-# -----------------------------
+---
+# -------------------------------
+# Ingress for path routing
+# -------------------------------
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: eshop-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+#  annotations:
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      access_by_lua_block {
+#          local jwt = require "resty.jwt"
+#          local cjson = require "cjson"
+#
+#          local token = ngx.var.http_authorization
+#          if token then
+#              token = token:gsub("Bearer ", "")
+#              local jwt_obj = jwt:verify("your_jwt_secret", token)
+#
+#              if jwt_obj.verified then
+#                  local claims = jwt_obj.payload
+#                  -- Forward specific claims as headers
+#                  ngx.req.set_header("X-User-Id", claims.sub)
+#                  ngx.req.set_header("X-User-Role", claims.role)
+#              end
+#          end
+#      }
 spec:
   rules:
-    - host: eshop.local
-      http:
-        paths:
-          - path: /api/products(/|$)(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: productservice
-                port:
-                  number: 80
-#          - path: /api/orders(/|$)(.*)
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: orderservice
-#                port:
-#                  number: 80
+  - http:
+      paths:
+      - path: /WeatherForecast
+        pathType: Prefix
+        backend:
+          service:
+            name: productservice-service
+            port:
+              number: 80
+      - path: /UserserviceForecast
+        pathType: Prefix
+        backend:
+          service:
+            name: userservice-service
+            port:
+              number: 80
