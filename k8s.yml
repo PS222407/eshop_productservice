@@ -1,41 +1,42 @@
-# # -------------------------------
-# # userservice Deployment
-# # -------------------------------
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: userservice-deployment
-# spec:
-#   replicas: 2
-#   selector:
-#     matchLabels:
-#       app: userservice
-#   template:
-#     metadata:
-#       labels:
-#         app: userservice
-#     spec:
-#       containers:
-#       - name: userservice
-#         image: jensr22/eshop_userservice:latest
-#         ports:
-#         - containerPort: 80
-# ---
-# # -------------------------------
-# # userservice Service
-# # -------------------------------
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: userservice-service
-# spec:
-#   selector:
-#     app: userservice
-#   ports:
-#     - protocol: TCP
-#       port: 80
-#       targetPort: 80
-#   type: ClusterIP
+# -------------------------------
+# userservice Deployment
+# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: userservice-deployment
+spec:
+ replicas: 2
+ selector:
+   matchLabels:
+     app: userservice
+ template:
+   metadata:
+     labels:
+       app: userservice
+   spec:
+     containers:
+     - name: userservice
+       image: jensr22/eshop_userservice:latest
+       imagePullPolicy: IfNotPresent
+       ports:
+       - containerPort: 8080
+---
+# -------------------------------
+# userservice Service
+# -------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+ name: userservice-service
+spec:
+ selector:
+   app: userservice
+ ports:
+   - protocol: TCP
+     port: 80
+     targetPort: 8080
+ type: ClusterIP
 
 ---
 # -------------------------------
@@ -88,17 +89,17 @@ spec:
   rules:
   - http:
       paths:
-      # - path: /user
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: userservice-service
-      #       port:
-      #         number: 80
       - path: /WeatherForecast
         pathType: Prefix
         backend:
           service:
             name: productservice-service
+            port:
+              number: 80
+      - path: /UserserviceForecast
+        pathType: Prefix
+        backend:
+          service:
+            name: userservice-service
             port:
               number: 80

@@ -53,6 +53,17 @@ docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8
 Now you can access http://localhost:8080/swagger/index.html  
 
 # k8s
+Prerequisites
+```bash
+minikube addons enable ingress
+```
+Load local images in minikube that are not hosted in a registry  
+```bash
+docker save userservice:latest -o userservice.tar
+```
+```bash
+minikube image load userservice.tar
+```
 Start kubernetes (if minikube is used):  
 ```bash
 minikube start
@@ -69,7 +80,11 @@ kubectl get svc eshop-productservice
 ```bash
 minikube service eshop-productservice
 ```
+View app in browser:
+```bash
+minikube ip
+```
 View kubernetes dashboard (if minikube is used):  
 ```bash
-minikube dashboard  
+minikube dashboard
 ```
