@@ -108,14 +108,14 @@ spec:
   rules:
   - http:
       paths:
-      - path: /WeatherForecast
+      - path: /api/productservice
         pathType: Prefix
         backend:
           service:
             name: productservice-service
             port:
               number: 80
-      - path: /UserserviceForecast
+      - path: /api/userservice
         pathType: Prefix
         backend:
           service:
