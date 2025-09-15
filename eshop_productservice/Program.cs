@@ -59,8 +59,15 @@ var app = builder.Build();
 // Add swagger endpoint
 // if (app.Environment.IsDevelopment())
 // {
-app.UseSwagger();
-app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-Shop ProductService API V1"); });
+app.UseSwagger(c =>
+{
+    c.RouteTemplate = "api/productservice/swagger/{documentname}/swagger.json";
+});
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/api/productservice/swagger/v1/swagger.json", "E-Shop ProductService API V1");
+    c.RoutePrefix = "api/productservice/swagger";
+});
 // }
 
 // Configure the HTTP request pipeline.
@@ -75,7 +82,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGet("/", () => Results.Json(new { status = "ok" }));
-app.MapGet("/api/productservice", () => Results.Json(new { status = "ok" }));
+app.MapGet("/", () => Results.Json(new { status = "ok", swaggerUrl = "api/productservice/swagger" }));
+app.MapGet("/api/productservice", () => Results.Json(new { status = "ok", swaggerUrl = "api/productservice/swagger" }));
 
 app.Run();

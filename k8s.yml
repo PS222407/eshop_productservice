@@ -85,25 +85,25 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: eshop-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      access_by_lua_block {
-          local jwt = require "resty.jwt"
-          local cjson = require "cjson"
-
-          local token = ngx.var.http_authorization
-          if token then
-              token = token:gsub("Bearer ", "")
-              local jwt_obj = jwt:verify("your_jwt_secret", token)
-
-              if jwt_obj.verified then
-                  local claims = jwt_obj.payload
-                  -- Forward specific claims as headers
-                  ngx.req.set_header("X-User-Id", claims.sub)
-                  ngx.req.set_header("X-User-Role", claims.role)
-              end
-          end
-      }
+#  annotations:
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      access_by_lua_block {
+#          local jwt = require "resty.jwt"
+#          local cjson = require "cjson"
+#
+#          local token = ngx.var.http_authorization
+#          if token then
+#              token = token:gsub("Bearer ", "")
+#              local jwt_obj = jwt:verify("your_jwt_secret", token)
+#
+#              if jwt_obj.verified then
+#                  local claims = jwt_obj.payload
+#                  -- Forward specific claims as headers
+#                  ngx.req.set_header("X-User-Id", claims.sub)
+#                  ngx.req.set_header("X-User-Role", claims.role)
+#              end
+#          end
+#      }
 spec:
   rules:
   - http:
