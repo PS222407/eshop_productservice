@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eshop_productservice.Controllers;
 
+[ApiController]
+[Route("api/productservice/v1/[controller]")]
 public class ProducerController : Controller
 {
     private readonly ProducerConfig _config = new()

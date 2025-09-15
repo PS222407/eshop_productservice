@@ -76,5 +76,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/", () => Results.Json(new { status = "ok" }));
+app.MapGet("/api/productservice", () => Results.Json(new { status = "ok" }));
 
 app.Run();
