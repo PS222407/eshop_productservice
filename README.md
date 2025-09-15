@@ -64,6 +64,10 @@ docker save userservice:latest -o userservice.tar
 ```bash
 minikube image load userservice.tar
 ```
+Ssh into minikube to check by running `docker image ls`
+```bash
+minikube ssh
+```
 Start kubernetes (if minikube is used):  
 ```bash
 minikube start
