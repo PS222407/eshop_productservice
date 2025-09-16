@@ -49,6 +49,8 @@ services:
       - "9092:9092"
       - "9093:9093"
       - "9094:9094"
+    volumes:
+      - ./data_kafka:/bitnami/kafka
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

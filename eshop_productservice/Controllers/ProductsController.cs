@@ -9,14 +9,12 @@ namespace eshop_productservice.Controllers;
 [Route("api/productservice/v1/[controller]")]
 public class ProductsController(ProductsService productsService) : ControllerBase
 {
-    [Authorize]
     [HttpGet]
     public async Task<List<Product>> Get()
     {
         return await productsService.GetAsync();
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Product>> Get(string id)
     {

@@ -1,26 +1,49 @@
 # -------------------------------
+# ConfigMap for userservice settings
+# -------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: userservice-config
+data:
+  Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
+  Jwt__Issuer: "yourCompanyIssuer.com"
+  Jwt__Audience: "yourCompanyAudience.com"
+  Jwt__ExpiresIn: "3600"
+  ConnectionStrings__DefaultConnection: "Server=host.minikube.internal;Port=3306;Database=eshop_userservice;User ID=root;Password=password;"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+---
+# -------------------------------
 # userservice Deployment
 # -------------------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: userservice-deployment
+  name: userservice-deployment
 spec:
- replicas: 2
- selector:
-   matchLabels:
-     app: userservice
- template:
-   metadata:
-     labels:
-       app: userservice
-   spec:
-     containers:
-     - name: userservice
-       image: jensr22/eshop_userservice:latest
-       imagePullPolicy: IfNotPresent
-       ports:
-       - containerPort: 8080
+  replicas: 2
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      containers:
+        - name: userservice
+          image: jensr22/eshop_userservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+          envFrom:
+            - configMapRef:
+                name: userservice-config
 ---
 # -------------------------------
 # userservice Service
@@ -28,15 +51,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
- name: userservice-service
+  name: userservice-service
 spec:
- selector:
-   app: userservice
- ports:
-   - protocol: TCP
-     port: 80
-     targetPort: 8080
- type: ClusterIP
+  selector:
+    app: userservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
 
 ---
 # -------------------------------
@@ -57,10 +80,10 @@ spec:
         app: productservice
     spec:
       containers:
-      - name: productservice
-        image: jensr22/eshop_productservice:latest
-        ports:
-        - containerPort: 8080
+        - name: productservice
+          image: jensr22/eshop_productservice:latest
+          ports:
+            - containerPort: 8080
 ---
 # -------------------------------
 # productservice Service
@@ -87,19 +110,19 @@ metadata:
   name: eshop-ingress
 spec:
   rules:
-  - http:
-      paths:
-      - path: /api/productservice
-        pathType: Prefix
-        backend:
-          service:
-            name: productservice-service
-            port:
-              number: 80
-      - path: /api/userservice
-        pathType: Prefix
-        backend:
-          service:
-            name: userservice-service
-            port:
-              number: 80
+    - http:
+        paths:
+          - path: /api/productservice
+            pathType: Prefix
+            backend:
+              service:
+                name: productservice-service
+                port:
+                  number: 80
+          - path: /api/userservice
+            pathType: Prefix
+            backend:
+              service:
+                name: userservice-service
+                port:
+                  number: 80
