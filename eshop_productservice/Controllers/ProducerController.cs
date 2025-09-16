@@ -5,7 +5,7 @@ namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/productservice/v1/[controller]")]
-public class ProducerController : Controller
+public class ProducerController : ControllerBase
 {
     private readonly ProducerConfig _config = new()
     {

@@ -59,10 +59,10 @@ minikube addons enable ingress
 ```
 Load local images in minikube that are not hosted in a registry  
 ```bash
-docker save userservice:latest -o userservice.tar
+docker save productservice:latest -o productservice.tar
 ```
 ```bash
-minikube image load userservice.tar
+minikube image load productservice.tar
 ```
 Ssh into minikube to check by running `docker image ls`
 ```bash
@@ -83,6 +83,10 @@ kubectl get svc eshop-productservice
 ```
 ```bash
 minikube service eshop-productservice
+```
+If new release of docker image is available and kubernetes pods were already running you need to redeploy using this command:
+```bash
+kubectl rollout restart deployment productservice-deployment
 ```
 View app in browser:
 ```bash
