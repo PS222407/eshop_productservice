@@ -5,18 +5,25 @@ namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/productservice/v1/[controller]")]
-public class ProducerController : ControllerBase
+public class ProducerController(IConfiguration configuration) : ControllerBase
 {
-    private readonly ProducerConfig _config = new()
+    private readonly string _server = configuration.GetValue<string>("Kafka:Server") ?? throw new InvalidOperationException();
+
+    private const string Topic = "test-topic";
+
+    private ProducerConfig GetConfig()
     {
-        BootstrapServers = "localhost:9094"
-    };
+        return new ProducerConfig
+        {
+            BootstrapServers = _server,
+        };
+    }
 
     [HttpPost("send")]
     public async Task<IActionResult> SendMessage([FromBody] string message)
     {
-        using var producer = new ProducerBuilder<Null, string>(_config).Build();
-        var result = await producer.ProduceAsync("test-topic", new Message<Null, string> { Value = message });
+        using var producer = new ProducerBuilder<Null, string>(GetConfig()).Build();
+        var result = await producer.ProduceAsync(Topic, new Message<Null, string> { Value = message });
         return Ok($"Sent: {message} to partition {result.Partition}");
     }
 }
