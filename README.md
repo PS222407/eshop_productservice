@@ -85,9 +85,6 @@ kubectl get pods
 ```bash
 kubectl get svc eshop-productservice
 ```
-```bash
-minikube service eshop-productservice
-```
 If new release of docker image is available and kubernetes pods were already running you need to redeploy using this command:
 ```bash
 kubectl rollout restart deployment productservice-deployment
