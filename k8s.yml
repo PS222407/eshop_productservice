@@ -1,4 +1,24 @@
 # -------------------------------
+# ConfigMap for productservice settings
+# -------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: productservice-config
+data:
+  Kafka__Server: "host.minikube.internal:9095"
+  eshop_productservice__ConnectionString: "mongodb://host.minikube.internal:27017"
+  eshop_productservice__DatabaseName: "eshop_productservice"
+  eshop_productservice__ProductsCollectionName: "Products"
+  Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
+  Jwt__Issuer: "yourCompanyIssuer.com"
+  Jwt__Audience: "yourCompanyAudience.com"
+  Jwt__ExpiresIn: "3600"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+---
+# -------------------------------
 # ConfigMap for userservice settings
 # -------------------------------
 apiVersion: v1
@@ -82,8 +102,15 @@ spec:
       containers:
         - name: productservice
           image: jensr22/eshop_productservice:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+          envFrom:
+            - configMapRef:
+                name: productservice-config
 ---
 # -------------------------------
 # productservice Service

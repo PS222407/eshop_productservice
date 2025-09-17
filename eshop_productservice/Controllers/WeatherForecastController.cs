@@ -24,4 +24,39 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
             })
             .ToArray();
     }
+
+    [HttpGet("Headers")]
+    public IActionResult GetHeaders()
+    {
+        var headers = Request.Headers
+            .ToDictionary(h => h.Key, h => h.Value.ToString());
+
+        return Ok(headers);
+    }
+
+    [HttpGet("Environment")]
+    public IActionResult GetEnvironmentVariables()
+    {
+        var envVars = Environment.GetEnvironmentVariables()
+            .Cast<System.Collections.DictionaryEntry>()
+            .ToDictionary(entry => entry.Key.ToString(), entry => entry.Value?.ToString());
+
+        return Ok(envVars);
+    }
+
+    [HttpGet("Config")]
+    public IActionResult GetConfigValues([FromServices] IConfiguration configuration)
+    {
+        var configDict = new Dictionary<string, string>();
+
+        foreach (var kvp in configuration.AsEnumerable())
+        {
+            if (!string.IsNullOrEmpty(kvp.Value))
+            {
+                configDict[kvp.Key] = kvp.Value;
+            }
+        }
+
+        return Ok(configDict);
+    }
 }
