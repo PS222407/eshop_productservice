@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eshop_productservice.Controllers;
@@ -38,7 +39,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     public IActionResult GetEnvironmentVariables()
     {
         var envVars = Environment.GetEnvironmentVariables()
-            .Cast<System.Collections.DictionaryEntry>()
+            .Cast<DictionaryEntry>()
             .ToDictionary(entry => entry.Key.ToString(), entry => entry.Value?.ToString());
 
         return Ok(envVars);
@@ -50,13 +51,15 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
         var configDict = new Dictionary<string, string>();
 
         foreach (var kvp in configuration.AsEnumerable())
-        {
             if (!string.IsNullOrEmpty(kvp.Value))
-            {
                 configDict[kvp.Key] = kvp.Value;
-            }
-        }
 
         return Ok(configDict);
+    }
+
+    [HttpGet("SeedProducts")]
+    public IActionResult SeedProducts()
+    {
+        return Ok("hoi");
     }
 }

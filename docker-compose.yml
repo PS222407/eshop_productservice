@@ -1,4 +1,22 @@
 services:
+  postgres:
+    image: postgres:17
+    container_name: eshop-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - PGDATA=/var/lib/postgresql/17/docker
+    volumes:
+      - ./data_postgres:/var/lib/postgresql/17/docker
+  
+  # login (system: PostgreSQL, server: postgres, username: postgres, password: mysecretpassword, database: postgres)
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+  
   mysql:
     image: mysql:8.0.36
     container_name: eshop-mysql
