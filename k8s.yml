@@ -36,6 +36,24 @@ data:
   AllowedHosts: "*"
 ---
 # -------------------------------
+# ConfigMap for cartservice settings
+# -------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cartservice-config
+data:
+  Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "cartservice-consumer-group"
+  Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
+  Jwt__Issuer: "yourCompanyIssuer.com"
+  Jwt__Audience: "yourCompanyAudience.com"
+  Jwt__ExpiresIn: "3600"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+---
+# -------------------------------
 # userservice Deployment
 # -------------------------------
 apiVersion: apps/v1
@@ -151,6 +169,12 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+          envFrom:
+            - configMapRef:
+                name: cartservice-config
 ---
 # -------------------------------
 # cartservice Service
