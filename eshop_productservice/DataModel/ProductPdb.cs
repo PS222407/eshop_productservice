@@ -24,7 +24,9 @@ public class ProductPdb
         {
             Id = Id.ToString(),
             Name = Name,
-            PriceInCents = PriceInCents
+            PriceInCents = PriceInCents,
+            StarsTimesTen = StarsTimesTen,
+            ImageUrl = ImgUrl
         };
     }
 }

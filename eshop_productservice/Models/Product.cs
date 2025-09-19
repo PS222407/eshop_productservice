@@ -10,17 +10,19 @@ public class Product
 
     public required int PriceInCents { get; set; }
 
+    public required string ImageUrl { get; set; }
+
+    public required int StarsTimesTen { get; set; }
+
     public ProductPdb ToProductPdb()
     {
-        var productPdb = new ProductPdb
+        return new ProductPdb
         {
             Name = Name,
-            PriceInCents = PriceInCents
+            PriceInCents = PriceInCents,
+            ImgUrl = ImageUrl,
+            StarsTimesTen = StarsTimesTen
         };
-
-        if (Id != null) productPdb.Id = new Guid(Id);
-
-        return productPdb;
     }
 
     public ProductMdb ToProductMdb()
@@ -29,7 +31,9 @@ public class Product
         {
             Id = Id,
             Name = Name,
-            PriceInCents = PriceInCents
+            PriceInCents = PriceInCents,
+            ImgUrl = ImageUrl,
+            StarsTimesTen = StarsTimesTen
         };
     }
 }

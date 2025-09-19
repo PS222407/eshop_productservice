@@ -1,4 +1,6 @@
 using eshop_productservice.Models;
+using eshop_productservice.Requests;
+using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Interfaces;
 
@@ -13,4 +15,6 @@ public interface IProductRepository
     public Task UpdateAsync(string id, Product updatedProductMdb);
 
     public Task RemoveAsync(string id);
+
+    public Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest);
 }

@@ -1,5 +1,7 @@
 using eshop_productservice.Models;
+using eshop_productservice.Requests;
 using eshop_productservice.Services;
+using eshop_productservice.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eshop_productservice.Controllers;
@@ -9,9 +11,9 @@ namespace eshop_productservice.Controllers;
 public class ProductsController(ProductsService productService) : ControllerBase
 {
     [HttpGet]
-    public async Task<List<Product>> Get()
+    public async Task<ActionResult<PaginationViewModel<Product>>> Search([FromQuery] SearchRequest searchRequest)
     {
-        return await productService.GetAsync();
+        return await productService.SearchAsync(searchRequest);
     }
 
     [HttpGet("{id}")]

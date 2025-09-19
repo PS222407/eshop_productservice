@@ -2,6 +2,8 @@ using eshop_productservice.Data;
 using eshop_productservice.DataModel;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
+using eshop_productservice.Requests;
+using eshop_productservice.ViewModels;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -53,5 +55,10 @@ public class ProductsRepositoryMongoDb : IProductRepository
     public async Task RemoveAsync(string id)
     {
         await _productsCollection.DeleteOneAsync(x => x.Id == id);
+    }
+
+    public Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest)
+    {
+        throw new NotImplementedException();
     }
 }

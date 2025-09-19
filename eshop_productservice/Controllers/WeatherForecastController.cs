@@ -1,9 +1,6 @@
 using System.Collections;
 using eshop_productservice.Data;
-using eshop_productservice.DataModel;
-using eshop_productservice.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic.FileIO;
 
 namespace eshop_productservice.Controllers;
 

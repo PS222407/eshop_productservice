@@ -15,13 +15,19 @@ public class ProductMdb
 
     public int PriceInCents { get; set; }
 
+    public int StarsTimesTen { get; set; }
+
+    public string ImgUrl { get; set; }
+
     public Product ToModel()
     {
         return new Product
         {
             Id = Id,
             Name = Name,
-            PriceInCents = PriceInCents
+            PriceInCents = PriceInCents,
+            StarsTimesTen = StarsTimesTen,
+            ImageUrl = ImgUrl
         };
     }
 }

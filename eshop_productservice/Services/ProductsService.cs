@@ -1,5 +1,7 @@
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
+using eshop_productservice.Requests;
+using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
 
@@ -28,5 +30,10 @@ public class ProductsService(IProductRepository repository)
     public async Task RemoveAsync(string id)
     {
         await repository.RemoveAsync(id);
+    }
+
+    public async Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest)
+    {
+        return await repository.SearchAsync(searchRequest);
     }
 }
