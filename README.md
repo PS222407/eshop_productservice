@@ -6,13 +6,26 @@ git clone git@github.com:PS222407/eshop_productservice.git
 ```bash
 cd eshop_productservice/  
 ```
+Create persistant directory for kafka, this directory must be owned by 1001:1001.
+```bash
+mkdir data_kafka && sudo chown -R 1001:1001 data_kafka
+```
 ```bash
 docker compose up -d  
 ```
 ```bash
 dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
+## Seed data
+You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
+```bash
+docker cp eshop_productservice/CSV/Products.sql eshop-postgres:/Products.sql
+```
+```bash
+docker exec -it eshop-postgres psql -U postgres -d eshop_productservice -f /Products.sql
+```
 
+## While developing
 **Run resharper:**
 ```bash
 jb cleanupcode ./eshop_cartservice.sln
@@ -59,10 +72,10 @@ minikube addons enable ingress
 ```
 Load local images in minikube that are not hosted in a registry  
 ```bash
-docker save productservice:latest -o productservice.tar
+docker save jensr22/eshop_productservice:latest -o eshop_productservice.tar
 ```
 ```bash
-minikube image load productservice.tar
+minikube image load eshop_productservice.tar
 ```
 Ssh into minikube to check by running `docker image ls`
 ```bash
@@ -80,9 +93,6 @@ kubectl get pods
 ```
 ```bash
 kubectl get svc eshop-productservice
-```
-```bash
-minikube service eshop-productservice
 ```
 If new release of docker image is available and kubernetes pods were already running you need to redeploy using this command:
 ```bash

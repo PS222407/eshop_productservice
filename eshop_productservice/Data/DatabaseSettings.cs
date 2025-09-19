@@ -1,4 +1,4 @@
-namespace eshop_productservice.Models;
+namespace eshop_productservice.Data;
 
 public class DatabaseSettings
 {

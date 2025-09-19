@@ -1,7 +1,10 @@
 using System.Text;
-using eshop_productservice.Models;
+using eshop_productservice.Data;
+using eshop_productservice.Interfaces;
+using eshop_productservice.repositories;
 using eshop_productservice.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -27,10 +30,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add services to the container.
+// Configure DbContext with PostgreSQL connection
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("eshop_productservice"));
 
-builder.Services.AddSingleton<ProductsService>();
+builder.Services.AddTransient<IProductRepository, ProductsRepositoryPostgres>();
+builder.Services.AddTransient<ProductsService>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -59,10 +67,7 @@ var app = builder.Build();
 // Add swagger endpoint
 // if (app.Environment.IsDevelopment())
 // {
-app.UseSwagger(c =>
-{
-    c.RouteTemplate = "api/productservice/swagger/{documentname}/swagger.json";
-});
+app.UseSwagger(c => { c.RouteTemplate = "api/productservice/swagger/{documentname}/swagger.json"; });
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/api/productservice/swagger/v1/swagger.json", "E-Shop ProductService API V1");

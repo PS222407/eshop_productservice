@@ -1,62 +1,61 @@
 using eshop_productservice.Models;
+using eshop_productservice.Requests;
 using eshop_productservice.Services;
-using Microsoft.AspNetCore.Authorization;
+using eshop_productservice.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/productservice/v1/[controller]")]
-public class ProductsController(ProductsService productsService) : ControllerBase
+public class ProductsController(ProductsService productService) : ControllerBase
 {
-    [Authorize]
     [HttpGet]
-    public async Task<List<Product>> Get()
+    public async Task<ActionResult<PaginationViewModel<Product>>> Search([FromQuery] SearchRequest searchRequest)
     {
-        return await productsService.GetAsync();
+        return await productService.SearchAsync(searchRequest);
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpGet("{id:length(24)}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Product>> Get(string id)
     {
-        var book = await productsService.GetAsync(id);
+        var product = await productService.GetAsync(id);
 
-        if (book is null) return NotFound();
+        if (product is null) return NotFound();
 
-        return book;
+        return product;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Product newBook)
+    public async Task<IActionResult> Post(Product product)
     {
-        await productsService.CreateAsync(newBook);
+        await productService.CreateAsync(product);
 
-        return CreatedAtAction(nameof(Get), new { id = newBook.Id }, newBook);
+        return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
     }
 
-    [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Product updatedBook)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, Product updatedProduct)
     {
-        var book = await productsService.GetAsync(id);
+        var product = await productService.GetAsync(id);
 
-        if (book is null) return NotFound();
+        if (product is null) return NotFound();
 
-        updatedBook.Id = book.Id;
+        updatedProduct.Id = product.Id;
 
-        await productsService.UpdateAsync(id, updatedBook);
+        await productService.UpdateAsync(id, updatedProduct);
 
         return NoContent();
     }
 
-    [HttpDelete("{id:length(24)}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var book = await productsService.GetAsync(id);
+        var product = await productService.GetAsync(id);
 
-        if (book is null) return NotFound();
+        if (product is null) return NotFound();
 
-        await productsService.RemoveAsync(id);
+        await productService.RemoveAsync(id);
 
         return NoContent();
     }
