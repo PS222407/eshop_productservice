@@ -1,50 +1,39 @@
+using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using eshop_productservice.Requests;
+using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
 
-public class ProductsService
+public class ProductsService(IProductRepository repository)
 {
-    private readonly IMongoCollection<Product> _productsCollection;
-
-    public ProductsService(
-        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductsService> logger)
-    {
-        var mongoClient = new MongoClient(
-            eShopDatabaseSettings.Value.ConnectionString);
-
-        var mongoDatabase = mongoClient.GetDatabase(
-            eShopDatabaseSettings.Value.DatabaseName);
-
-        _productsCollection = mongoDatabase.GetCollection<Product>(
-            eShopDatabaseSettings.Value.ProductsCollectionName);
-
-        logger.LogInformation("Products collection created LOGGING");
-    }
-
     public async Task<List<Product>> GetAsync()
     {
-        return await _productsCollection.Find(_ => true).ToListAsync();
+        return await repository.GetAsync();
     }
 
     public async Task<Product?> GetAsync(string id)
     {
-        return await _productsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return await repository.GetAsync(id);
     }
 
-    public async Task CreateAsync(Product newProduct)
+    public async Task CreateAsync(Product product)
     {
-        await _productsCollection.InsertOneAsync(newProduct);
+        await repository.CreateAsync(product);
     }
 
-    public async Task UpdateAsync(string id, Product updatedProduct)
+    public async Task UpdateAsync(string id, Product product)
     {
-        await _productsCollection.ReplaceOneAsync(x => x.Id == id, updatedProduct);
+        await repository.UpdateAsync(id, product);
     }
 
     public async Task RemoveAsync(string id)
     {
-        await _productsCollection.DeleteOneAsync(x => x.Id == id);
+        await repository.RemoveAsync(id);
+    }
+
+    public async Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest)
+    {
+        return await repository.SearchAsync(searchRequest);
     }
 }
