@@ -14,7 +14,7 @@ public class ProductsController(ProductsService productService) : ControllerBase
         return await productService.GetAsync();
     }
 
-    [HttpGet("{id:length(24)}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Product>> Get(string id)
     {
         var product = await productService.GetAsync(id);
@@ -32,7 +32,7 @@ public class ProductsController(ProductsService productService) : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
     }
 
-    [HttpPut("{id:length(24)}")]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, Product updatedProduct)
     {
         var product = await productService.GetAsync(id);
@@ -46,7 +46,7 @@ public class ProductsController(ProductsService productService) : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:length(24)}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
         var product = await productService.GetAsync(id);

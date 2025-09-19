@@ -16,7 +16,16 @@ docker compose up -d
 ```bash
 dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
+## Seed data
+You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
+```bash
+docker cp eshop_productservice/CSV/Products.sql eshop-postgres:/Products.sql
+```
+```bash
+docker exec -it eshop-postgres psql -U postgres -d eshop_productservice -f /Products.sql
+```
 
+## While developing
 **Run resharper:**
 ```bash
 jb cleanupcode ./eshop_cartservice.sln

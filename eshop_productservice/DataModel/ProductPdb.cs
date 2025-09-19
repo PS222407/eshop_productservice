@@ -6,9 +6,17 @@ public class ProductPdb
 {
     public Guid Id { get; set; }
 
+    public Guid CategoryId { get; set; }
+
+    public Category Category { get; set; }
+
     public required string Name { get; set; }
 
     public int PriceInCents { get; set; }
+
+    public int StarsTimesTen { get; set; }
+
+    public string ImgUrl { get; set; }
 
     public Product ToModel()
     {

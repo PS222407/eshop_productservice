@@ -7,6 +7,7 @@ metadata:
   name: productservice-config
 data:
   Kafka__Server: "host.minikube.internal:9095"
+  ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5432;Database=eshop_productservice;Username=postgres;Password=mysecretpassword;"
   eshop_productservice__ConnectionString: "mongodb://host.minikube.internal:27017"
   eshop_productservice__DatabaseName: "eshop_productservice"
   eshop_productservice__ProductsCollectionName: "Products"

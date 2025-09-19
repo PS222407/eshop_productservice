@@ -15,7 +15,8 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
 
     public async Task<Product?> GetAsync(string id)
     {
-        return (await context.Products.FindAsync(id))
+        var guid = new Guid(id);
+        return (await context.Products.FindAsync(guid))
             ?.ToModel();
     }
 
@@ -37,7 +38,8 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
 
     public async Task RemoveAsync(string id)
     {
-        var product = await context.Products.FindAsync(id);
+        var guid = new Guid(id);
+        var product = await context.Products.FindAsync(guid);
         if (product == null) return;
         context.Products.Remove(product);
         await context.SaveChangesAsync();
