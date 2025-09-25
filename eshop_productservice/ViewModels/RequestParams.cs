@@ -4,5 +4,5 @@ public class RequestParams
 {
     public int per_page { get; set; }
 
-    public string q { get; set; }
+    public string? q { get; set; }
 }

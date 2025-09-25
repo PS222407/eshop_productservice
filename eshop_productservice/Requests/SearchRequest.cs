@@ -4,7 +4,7 @@ namespace eshop_productservice.Requests;
 
 public class SearchRequest
 {
-    [DefaultValue("brush")] public string q { get; set; }
+    [DefaultValue("brush")] public string? q { get; set; }
 
     [DefaultValue("{\"categories\": [\"0199708c-4eb6-71d1-9e48-83102c0155a4\"]}")]
     public string? filter_by { get; set; }

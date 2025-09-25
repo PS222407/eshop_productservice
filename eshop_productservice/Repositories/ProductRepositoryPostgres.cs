@@ -70,7 +70,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
             request_params = new RequestParams
             {
                 per_page = searchRequest.per_page,
-                q = searchRequest.q.Trim()
+                q = searchRequest.q?.Trim()
             }
         };
     }
@@ -89,8 +89,9 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
 
         string? categoryId = filters?.categories[0];
 
-        var query = context.Products.AsQueryable()
-            .Where(p => p.Name.Contains(searchRequest.q.Trim()));
+        var query = context.Products.AsQueryable();
+        if (searchRequest.q != null && searchRequest.q.Trim() != "")
+            query = query.Where(p => p.Name.Contains(searchRequest.q.Trim()));
 
         if (categoryId != null)
             query = query.Where(p => p.CategoryId == new Guid(categoryId));

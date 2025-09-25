@@ -15,4 +15,15 @@ public class CategoryService(CategoryRepository repository)
                 Count = c.Count
             }).ToList();
     }
+
+    public async Task<CategoryViewModel> Get(string id)
+    {
+        var category = await repository.GetAsync(id);
+
+        return new CategoryViewModel
+        {
+            Id = category.Id.ToString(),
+            Name = category.Name
+        };
+    }
 }

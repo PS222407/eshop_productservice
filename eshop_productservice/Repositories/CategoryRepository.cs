@@ -1,4 +1,5 @@
 using eshop_productservice.Data;
+using eshop_productservice.Models;
 using eshop_productservice.Projections;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,5 +17,10 @@ public class CategoryRepository(AppDbContext context)
                 Count = context.Products.Count(p => p.CategoryId == c.Id)
             })
             .ToListAsync();
+    }
+
+    public async Task<Category> GetAsync(string id)
+    {
+        return await context.Categories.FirstAsync(c => c.Id.ToString() == id);
     }
 }
