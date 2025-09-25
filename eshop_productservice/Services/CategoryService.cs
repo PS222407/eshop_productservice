@@ -8,11 +8,11 @@ public class CategoryService(CategoryRepository repository)
     public async Task<List<CategoryViewModel>> Get()
     {
         return (await repository.GetAsync())
-            .Select(c => new CategoryViewModel()
+            .Select(c => new CategoryViewModel
             {
                 Id = c.Id,
                 Name = c.Name,
-                Count = c.Count,
+                Count = c.Count
             }).ToList();
     }
 }
