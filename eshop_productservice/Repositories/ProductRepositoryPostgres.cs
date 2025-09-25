@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace eshop_productservice.repositories;
 
-public class ProductsRepositoryPostgres(AppDbContext context) : IProductRepository
+public class ProductRepositoryPostgres(AppDbContext context) : IProductRepository
 {
     public async Task<List<Product>> GetAsync()
     {

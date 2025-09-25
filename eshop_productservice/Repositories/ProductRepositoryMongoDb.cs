@@ -9,12 +9,12 @@ using MongoDB.Driver;
 
 namespace eshop_productservice.repositories;
 
-public class ProductsRepositoryMongoDb : IProductRepository
+public class ProductRepositoryMongoDb : IProductRepository
 {
     private readonly IMongoCollection<ProductMdb> _productsCollection;
 
-    public ProductsRepositoryMongoDb(
-        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductsRepositoryMongoDb> logger)
+    public ProductRepositoryMongoDb(
+        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductRepositoryMongoDb> logger)
     {
         var mongoClient = new MongoClient(
             eShopDatabaseSettings.Value.ConnectionString);

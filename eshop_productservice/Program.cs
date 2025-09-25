@@ -37,8 +37,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("eshop_productservice"));
 
-builder.Services.AddTransient<IProductRepository, ProductsRepositoryPostgres>();
-builder.Services.AddTransient<ProductsService>();
+builder.Services.AddTransient<IProductRepository, ProductRepositoryPostgres>();
+builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<CategoryService>();
+builder.Services.AddTransient<CategoryRepository>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();

@@ -8,7 +8,7 @@ namespace eshop_productservice.Controllers;
 
 [ApiController]
 [Route("api/productservice/v1/[controller]")]
-public class ProductsController(ProductsService productService) : ControllerBase
+public class ProductController(ProductService productService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<PaginationViewModel<Product>>> Search([FromQuery] SearchRequest searchRequest)
