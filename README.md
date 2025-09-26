@@ -26,6 +26,11 @@ docker cp eshop_productservice/CSV/Products.sql eshop-postgres:/Products.sql
 docker exec -it eshop-postgres psql -U postgres -d eshop_productservice -f /Products.sql
 ```
 
+## Create indexes
+```sql
+CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
+```
+
 ## While developing
 **Run resharper:**
 ```bash

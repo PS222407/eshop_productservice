@@ -54,6 +54,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         var query = BuildSearchQuery(searchRequest);
 
         var products = (await query
+                .OrderBy(p => p.Id)
                 .Skip((searchRequest.page - 1) * searchRequest.per_page)
                 .Take(searchRequest.per_page)
                 .ToListAsync())
@@ -90,8 +91,15 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         string? categoryId = filters?.categories[0];
 
         var query = context.Products.AsQueryable();
-        if (searchRequest.q != null && searchRequest.q.Trim() != "")
-            query = query.Where(p => p.Name.Contains(searchRequest.q.Trim()));
+        if (!string.IsNullOrWhiteSpace(searchRequest.q))
+        {
+            var searchTerm = searchRequest.q.Trim().ToLower();
+            query = query.Where(p => EF.Functions.ToTsVector("english", p.Name)
+            .Matches(EF.Functions.PlainToTsQuery("english", searchTerm)));
+            
+            // query = query.Where(p => p.Name.ToLower().Contains(searchRequest.q.ToLower().Trim()));
+        }
+            
 
         if (categoryId != null)
             query = query.Where(p => p.CategoryId == new Guid(categoryId));
