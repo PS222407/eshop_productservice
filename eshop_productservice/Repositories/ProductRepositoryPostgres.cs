@@ -24,6 +24,14 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
             ?.ToModel();
     }
 
+    public async Task<List<Product>> GetAsync(List<Guid> ids)
+    {
+        return await context.Products
+            .Where(p => ids.Contains(p.Id))
+            .Select(p => p.ToModel())
+            .ToListAsync();
+    }
+
     public async Task CreateAsync(Product product)
     {
         var productPdb = product.ToProductPdb();

@@ -26,37 +26,14 @@ public class ProductController(ProductService productService) : ControllerBase
         return product;
     }
 
-    // [HttpPost]
-    // public async Task<IActionResult> Post(Product product)
-    // {
-    //     await productService.CreateAsync(product);
-    //
-    //     return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
-    // }
-    //
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> Update(string id, Product updatedProduct)
-    // {
-    //     var product = await productService.GetAsync(id);
-    //
-    //     if (product is null) return NotFound();
-    //
-    //     updatedProduct.Id = product.Id;
-    //
-    //     await productService.UpdateAsync(id, updatedProduct);
-    //
-    //     return NoContent();
-    // }
-    //
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> Delete(string id)
-    // {
-    //     var product = await productService.GetAsync(id);
-    //
-    //     if (product is null) return NotFound();
-    //
-    //     await productService.RemoveAsync(id);
-    //
-    //     return NoContent();
-    // }
+    [HttpGet("Batch")]
+    public async Task<ActionResult<List<Product>>> GetBatch([FromQuery] ProductBatchRequest request)
+    {
+        if (request.Ids.Count == 0)
+            return BadRequest("At least one id must be provided.");
+
+        var products = await productService.GetAsync(request.Ids);
+        
+        return Ok(products);
+    }
 }

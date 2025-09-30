@@ -40,6 +40,11 @@ public class ProductRepositoryMongoDb : IProductRepository
             .ToModel();
     }
 
+    public Task<List<Product>> GetAsync(List<Guid> ids)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task CreateAsync(Product product)
     {
         var productMdb = product.ToProductMdb();

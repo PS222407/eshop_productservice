@@ -11,6 +11,11 @@ public class ProductService(IProductRepository repository)
     {
         return await repository.GetAsync(id);
     }
+    
+    public async Task<List<Product>> GetAsync(List<Guid> ids)
+    {
+        return await repository.GetAsync(ids);
+    }
 
     public async Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest)
     {
