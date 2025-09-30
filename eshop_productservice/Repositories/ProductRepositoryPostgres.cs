@@ -7,9 +7,9 @@ using eshop_productservice.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace eshop_productservice.repositories;
+namespace eshop_productservice.Repositories;
 
-public class ProductsRepositoryPostgres(AppDbContext context) : IProductRepository
+public class ProductRepositoryPostgres(AppDbContext context) : IProductRepository
 {
     public async Task<List<Product>> GetAsync()
     {
@@ -22,6 +22,14 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
         var guid = new Guid(id);
         return (await context.Products.FindAsync(guid))
             ?.ToModel();
+    }
+
+    public async Task<List<Product>> GetAsync(List<Guid> ids)
+    {
+        return await context.Products
+            .Where(p => ids.Contains(p.Id))
+            .Select(p => p.ToModel())
+            .ToListAsync();
     }
 
     public async Task CreateAsync(Product product)
@@ -54,6 +62,7 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
         var query = BuildSearchQuery(searchRequest);
 
         var products = (await query
+                .OrderBy(p => p.Id)
                 .Skip((searchRequest.page - 1) * searchRequest.per_page)
                 .Take(searchRequest.per_page)
                 .ToListAsync())
@@ -70,7 +79,7 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
             request_params = new RequestParams
             {
                 per_page = searchRequest.per_page,
-                q = searchRequest.q.Trim()
+                q = searchRequest.q?.Trim()
             }
         };
     }
@@ -89,8 +98,16 @@ public class ProductsRepositoryPostgres(AppDbContext context) : IProductReposito
 
         string? categoryId = filters?.categories[0];
 
-        var query = context.Products.AsQueryable()
-            .Where(p => p.Name.Contains(searchRequest.q.Trim()));
+        var query = context.Products.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(searchRequest.q))
+        {
+            var searchTerm = searchRequest.q.Trim().ToLower();
+            query = query.Where(p => EF.Functions.ToTsVector("english", p.Name)
+                .Matches(EF.Functions.PlainToTsQuery("english", searchTerm)));
+
+            // query = query.Where(p => p.Name.ToLower().Contains(searchRequest.q.ToLower().Trim()));
+        }
+
 
         if (categoryId != null)
             query = query.Where(p => p.CategoryId == new Guid(categoryId));

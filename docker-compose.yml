@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:17
     container_name: eshop-postgres
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
@@ -13,16 +14,16 @@ services:
   # login (system: PostgreSQL, server: postgres, username: postgres, password: mysecretpassword, database: postgres)
   adminer:
     image: adminer
-    restart: always
+    restart: on-failure
     ports:
-      - 8082:8080
+      - "8082:8080"
   
   mysql:
     image: mysql:8.0.36
     container_name: eshop-mysql
+    restart: on-failure
     ports:
       - "3306:3306"
-    restart: on-failure
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=user
@@ -44,13 +45,36 @@ services:
 
   mongodb:
     image: mongo:8.0
-    container_name: mongodb
+    container_name: eshop-mongodb
+    restart: on-failure
     ports:
       - "27017:27017"
 
+  compass:
+    image: haohanyang/compass-web
+    container_name: eshop-compass
+    restart: on-failure
+    environment:
+      - CW_MONGO_URI=mongodb://mongodb:27017
+    ports:
+      - "8083:8080"
+
+  mongo-express:
+    image: mongo-express
+    container_name: eshop-mongo-express
+    restart: on-failure
+    ports:
+      - 8085:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: false
+#      ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
+#      ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+
   kafka:
     image: bitnami/kafka:3.9
-    container_name: kafka
+    container_name: eshop-kafka
+    restart: on-failure
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
@@ -73,7 +97,8 @@ services:
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
+    container_name: eshop-kafka-ui
+    restart: on-failure
     depends_on:
       - kafka
     ports:
@@ -81,3 +106,12 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: on-failure
+    ports:
+      - "80:80"
+    volumes:
+      - ./dockerFiles/nginx.conf:/etc/nginx/conf.d/default.conf

@@ -7,14 +7,14 @@ using eshop_productservice.ViewModels;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace eshop_productservice.repositories;
+namespace eshop_productservice.Repositories;
 
-public class ProductsRepositoryMongoDb : IProductRepository
+public class ProductRepositoryMongoDb : IProductRepository
 {
     private readonly IMongoCollection<ProductMdb> _productsCollection;
 
-    public ProductsRepositoryMongoDb(
-        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductsRepositoryMongoDb> logger)
+    public ProductRepositoryMongoDb(
+        IOptions<DatabaseSettings> eShopDatabaseSettings, ILogger<ProductRepositoryMongoDb> logger)
     {
         var mongoClient = new MongoClient(
             eShopDatabaseSettings.Value.ConnectionString);
@@ -38,6 +38,11 @@ public class ProductsRepositoryMongoDb : IProductRepository
     {
         return (await _productsCollection.Find(x => x.Id == id).FirstOrDefaultAsync())
             .ToModel();
+    }
+
+    public Task<List<Product>> GetAsync(List<Guid> ids)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task CreateAsync(Product product)

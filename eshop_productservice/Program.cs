@@ -1,7 +1,7 @@
 using System.Text;
 using eshop_productservice.Data;
 using eshop_productservice.Interfaces;
-using eshop_productservice.repositories;
+using eshop_productservice.Repositories;
 using eshop_productservice.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -37,8 +37,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("eshop_productservice"));
 
-builder.Services.AddTransient<IProductRepository, ProductsRepositoryPostgres>();
-builder.Services.AddTransient<ProductsService>();
+builder.Services.AddTransient<IProductRepository, ProductRepositoryPostgres>();
+builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<CategoryService>();
+builder.Services.AddTransient<CategoryRepository>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -59,10 +61,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt:Key").Get<string>()!))
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(corsPolicyBuilder =>
+    {
+        corsPolicyBuilder.WithOrigins(builder.Configuration.GetValue<string>("FrontendUrl"))
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseCors();
 
 // Add swagger endpoint
 // if (app.Environment.IsDevelopment())

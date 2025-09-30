@@ -9,6 +9,8 @@ public interface IProductRepository
     public Task<List<Product>> GetAsync();
 
     public Task<Product?> GetAsync(string id);
+    
+    public Task<List<Product>> GetAsync(List<Guid> ids);
 
     public Task CreateAsync(Product newProductMdb);
 

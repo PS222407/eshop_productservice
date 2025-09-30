@@ -17,12 +17,18 @@ docker compose up -d
 dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
 ## Seed data
+Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
 docker cp eshop_productservice/CSV/Products.sql eshop-postgres:/Products.sql
 ```
 ```bash
 docker exec -it eshop-postgres psql -U postgres -d eshop_productservice -f /Products.sql
+```
+
+## Create indexes
+```sql
+CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
 ```
 
 ## While developing
