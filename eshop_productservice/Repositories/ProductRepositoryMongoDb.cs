@@ -7,7 +7,7 @@ using eshop_productservice.ViewModels;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace eshop_productservice.repositories;
+namespace eshop_productservice.Repositories;
 
 public class ProductRepositoryMongoDb : IProductRepository
 {

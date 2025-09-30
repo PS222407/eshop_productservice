@@ -7,7 +7,7 @@ using eshop_productservice.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace eshop_productservice.repositories;
+namespace eshop_productservice.Repositories;
 
 public class ProductRepositoryPostgres(AppDbContext context) : IProductRepository
 {
@@ -95,11 +95,11 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         {
             var searchTerm = searchRequest.q.Trim().ToLower();
             query = query.Where(p => EF.Functions.ToTsVector("english", p.Name)
-            .Matches(EF.Functions.PlainToTsQuery("english", searchTerm)));
-            
+                .Matches(EF.Functions.PlainToTsQuery("english", searchTerm)));
+
             // query = query.Where(p => p.Name.ToLower().Contains(searchRequest.q.ToLower().Trim()));
         }
-            
+
 
         if (categoryId != null)
             query = query.Where(p => p.CategoryId == new Guid(categoryId));

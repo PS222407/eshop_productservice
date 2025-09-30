@@ -1,7 +1,7 @@
 using System.Text;
 using eshop_productservice.Data;
 using eshop_productservice.Interfaces;
-using eshop_productservice.repositories;
+using eshop_productservice.Repositories;
 using eshop_productservice.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

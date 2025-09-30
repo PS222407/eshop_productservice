@@ -3,7 +3,7 @@ using eshop_productservice.Models;
 using eshop_productservice.Projections;
 using Microsoft.EntityFrameworkCore;
 
-namespace eshop_productservice.repositories;
+namespace eshop_productservice.Repositories;
 
 public class CategoryRepository(AppDbContext context)
 {

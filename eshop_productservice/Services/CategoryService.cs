@@ -1,4 +1,4 @@
-using eshop_productservice.repositories;
+using eshop_productservice.Repositories;
 using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
