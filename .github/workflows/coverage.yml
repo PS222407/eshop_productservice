@@ -24,7 +24,7 @@ jobs:
         run: dotnet build --no-restore
       - name: Run tests and generate coverage reports
         run: |
-          dotnet test --collect:"XPlat Code Coverage" --results-directory:"xplat"
+          dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat"
           mkdir -p coverage/1
           mkdir -p coverage/2
           mv ./xplat/*/coverage.cobertura.xml ./coverage/1 2>/dev/null || true
