@@ -1,0 +1,17 @@
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <ExcludeByFile>
+            **/Program.cs,
+            **/*Migrations/*.cs,
+            **/*Data/*.cs,
+            **/*DataModel/*.cs,
+            **/*Repositories/*.cs
+          </ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
