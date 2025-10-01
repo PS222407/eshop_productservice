@@ -15,7 +15,7 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<CategoryViewModel>> Index(string id)
+    public async Task<ActionResult<CategoryViewModel?>> Index(string id)
     {
         return await categoryService.Get(id);
     }

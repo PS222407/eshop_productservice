@@ -1,9 +1,9 @@
-using eshop_productservice.Repositories;
+using eshop_productservice.Interfaces;
 using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
 
-public class CategoryService(CategoryRepository repository)
+public class CategoryService(ICategoryRepository repository)
 {
     public async Task<List<CategoryViewModel>> Get()
     {
@@ -16,9 +16,10 @@ public class CategoryService(CategoryRepository repository)
             }).ToList();
     }
 
-    public async Task<CategoryViewModel> Get(string id)
+    public async Task<CategoryViewModel?> Get(string id)
     {
         var category = await repository.GetAsync(id);
+        if (category is null) return null;
 
         return new CategoryViewModel
         {

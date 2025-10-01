@@ -40,7 +40,7 @@ builder.Services.Configure<DatabaseSettings>(
 builder.Services.AddTransient<IProductRepository, ProductRepositoryPostgres>();
 builder.Services.AddTransient<ProductService>();
 builder.Services.AddTransient<CategoryService>();
-builder.Services.AddTransient<CategoryRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
