@@ -4,7 +4,7 @@ using eshop_productservice.Requests;
 
 namespace eshop_productservice.Interfaces;
 
-public interface IProductRepository
+public interface IProductService
 {
     public Task<Product?> GetAsync(string id);
 

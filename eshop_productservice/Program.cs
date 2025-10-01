@@ -38,9 +38,9 @@ builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("eshop_productservice"));
 
 builder.Services.AddTransient<IProductRepository, ProductRepositoryPostgres>();
-builder.Services.AddTransient<ProductService>();
-builder.Services.AddTransient<CategoryService>();
-builder.Services.AddTransient<CategoryRepository>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
