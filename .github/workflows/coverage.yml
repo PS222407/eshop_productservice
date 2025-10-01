@@ -1,7 +1,8 @@
 name: CodeCoverage
 
 permissions:
-  pull-requests: write
+  contents: read       # for actions/checkout
+  pull-requests: write # for writing coverage to PR
 
 on:
 #  push:
