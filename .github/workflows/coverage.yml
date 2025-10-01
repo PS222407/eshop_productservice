@@ -1,5 +1,7 @@
 name: CodeCoverage
 
+permissions:
+  pull-requests: write
 on:
   push:
     branches: [ "main", "develop" ]
