@@ -8,5 +8,5 @@ public class Category
 
     public string Name { get; set; }
 
-    public List<ProductPdb>? Products { get; set; } = [];
+    public List<ProductDataModel>? Products { get; set; } = [];
 }

@@ -13,7 +13,15 @@ public class ProductController(IProductService productService) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginationViewModel<Product>>> Search([FromQuery] SearchRequest searchRequest)
     {
-        return Ok(await productService.SearchAsync(searchRequest));
+        var result = await productService.SearchAsync(searchRequest);
+
+        return Ok(new PaginationViewModel<Product>
+        {
+            found = result.found,
+            page = result.page,
+            hits = result.hits,
+            request_params = result.request_params
+        });
     }
 
     [HttpGet("{id}")]
@@ -33,7 +41,7 @@ public class ProductController(IProductService productService) : ControllerBase
             return BadRequest("At least one id must be provided.");
 
         var products = await productService.GetAsync(request.Ids);
-        
+
         return Ok(products);
     }
 }

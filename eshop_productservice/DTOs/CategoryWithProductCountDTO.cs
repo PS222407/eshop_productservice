@@ -1,6 +1,6 @@
-namespace eshop_productservice.Projections;
+namespace eshop_productservice.DTOs;
 
-public class CategoryWithProductCountProjection
+public class CategoryWithProductCountDto
 {
     public string Id { get; set; }
 

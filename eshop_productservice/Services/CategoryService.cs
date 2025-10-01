@@ -1,30 +1,18 @@
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
-using eshop_productservice.ViewModels;
+using eshop_productservice.Models;
 
 namespace eshop_productservice.Services;
 
 public class CategoryService(ICategoryRepository repository) : ICategoryService
 {
-    public async Task<List<CategoryViewModel>> Get()
+    public async Task<List<CategoryWithProductCountDto>> Get()
     {
-        return (await repository.GetAsync())
-            .Select(c => new CategoryViewModel
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Count = c.Count
-            }).ToList();
+        return await repository.GetAsync();
     }
 
-    public async Task<CategoryViewModel?> Get(string id)
+    public async Task<Category?> Get(string id)
     {
-        var category = await repository.GetAsync(id);
-        if (category is null) return null;
-
-        return new CategoryViewModel
-        {
-            Id = category.Id.ToString(),
-            Name = category.Name
-        };
+        return await repository.GetAsync(id);
     }
 }

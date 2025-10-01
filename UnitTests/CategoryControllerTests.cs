@@ -1,5 +1,7 @@
 using eshop_productservice.Controllers;
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
+using eshop_productservice.Models;
 using eshop_productservice.ViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +11,8 @@ namespace UnitTests;
 
 public class CategoryControllerTests
 {
-    private readonly Mock<ICategoryService> _mockCategoryService;
     private readonly CategoryController _controller;
+    private readonly Mock<ICategoryService> _mockCategoryService;
 
     public CategoryControllerTests()
     {
@@ -22,7 +24,12 @@ public class CategoryControllerTests
     public async Task Index_ReturnsAllCategories()
     {
         // Arrange
-        var categories = new List<CategoryViewModel>
+        var categories = new List<CategoryWithProductCountDto>
+        {
+            new() { Id = "1", Name = "Electronics", Count = 3 },
+            new() { Id = "2", Name = "Books", Count = 10 }
+        };
+        var expectedCategories = new List<CategoryViewModel>
         {
             new() { Id = "1", Name = "Electronics", Count = 3 },
             new() { Id = "2", Name = "Books", Count = 10 }
@@ -36,14 +43,14 @@ public class CategoryControllerTests
         var okResult = result.Result as OkObjectResult;
         okResult.Should().NotBeNull();
         var value = okResult.Value as List<CategoryViewModel>;
-        value.Should().BeEquivalentTo(categories);
+        value.Should().BeEquivalentTo(expectedCategories);
     }
 
     [Fact]
     public async Task Index_ReturnsEmptyList()
     {
         // Arrange
-        _mockCategoryService.Setup(s => s.Get()).ReturnsAsync(new List<CategoryViewModel>());
+        _mockCategoryService.Setup(s => s.Get()).ReturnsAsync([]);
 
         // Act
         var result = await _controller.Index();
@@ -59,24 +66,26 @@ public class CategoryControllerTests
     public async Task Index_ById_ReturnsCategory()
     {
         // Arrange
-        var category = new CategoryViewModel { Id = "1", Name = "Electronics", Count = 3 };
-        _mockCategoryService.Setup(s => s.Get("1")).ReturnsAsync(category);
+        var category = new Category { Id = new Guid("68dd3a02-f6f8-832c-a715-2d9902a28601"), Name = "Electronics" };
+        var expectedCategory = new CategoryViewModel
+            { Id = "68dd3a02-f6f8-832c-a715-2d9902a28601", Name = "Electronics" };
+        _mockCategoryService.Setup(s => s.Get("68dd3a02-f6f8-832c-a715-2d9902a28601")).ReturnsAsync(category);
 
         // Act
-        var result = await _controller.Index("1");
+        var result = await _controller.Index("68dd3a02-f6f8-832c-a715-2d9902a28601");
 
         // Assert
         var okResult = result.Result as OkObjectResult;
         okResult.Should().NotBeNull();
         var value = okResult.Value as CategoryViewModel;
-        value.Should().BeEquivalentTo(category);
+        value.Should().BeEquivalentTo(expectedCategory);
     }
 
     [Fact]
     public async Task Index_ById_ReturnsNotFound()
     {
         // Arrange
-        _mockCategoryService.Setup(s => s.Get("999")).ReturnsAsync((CategoryViewModel?)null);
+        _mockCategoryService.Setup(s => s.Get("999")).ReturnsAsync((Category?)null);
 
         // Act
         var result = await _controller.Index("999");
@@ -86,4 +95,3 @@ public class CategoryControllerTests
         notFoundResult.Should().NotBeNull();
     }
 }
-

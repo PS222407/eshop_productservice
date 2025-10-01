@@ -1,17 +1,17 @@
 using eshop_productservice.Data;
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
-using eshop_productservice.Projections;
 using Microsoft.EntityFrameworkCore;
 
 namespace eshop_productservice.Repositories;
 
 public class CategoryRepository(AppDbContext context) : ICategoryRepository
 {
-    public async Task<List<CategoryWithProductCountProjection>> GetAsync()
+    public async Task<List<CategoryWithProductCountDto>> GetAsync()
     {
         return await context.Categories.OrderBy(c => c.Name)
-            .Select(c => new CategoryWithProductCountProjection
+            .Select(c => new CategoryWithProductCountDto
             {
                 Id = c.Id.ToString(),
                 Name = c.Name,

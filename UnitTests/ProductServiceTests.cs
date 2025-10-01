@@ -1,3 +1,4 @@
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
 using eshop_productservice.Requests;
@@ -25,9 +26,9 @@ public class ProductServiceTests
         // Arrange
         const string productId = "68dd3a02-f6f8-832c-a715-2d9902a28601";
         var expectedProduct = new Product
-        { 
-            Id = productId, 
-            Name = "Laptop", 
+        {
+            Id = productId,
+            Name = "Laptop",
             PriceInCents = 99999,
             StarsTimesTen = 46,
             ImageUrl = "https://example.com/laptop.jpg"
@@ -61,15 +62,23 @@ public class ProductServiceTests
     public async Task GetAsync_WithIdList_ReturnsProducts()
     {
         // Arrange
-        var ids = new List<Guid> 
-        { 
-            Guid.Parse("68dd3a02-f6f8-832c-a715-2d9902a28601"), 
-            Guid.Parse("68dcde78-e9e0-8322-b735-ee59674a4cff") 
+        var ids = new List<Guid>
+        {
+            Guid.Parse("68dd3a02-f6f8-832c-a715-2d9902a28601"),
+            Guid.Parse("68dcde78-e9e0-8322-b735-ee59674a4cff")
         };
         var expectedProducts = new List<Product>
         {
-            new() { Id = ids[0].ToString(), Name = "Laptop", PriceInCents = 99999, StarsTimesTen = 46, ImageUrl = "https://example.com/laptop.jpg" },
-            new() { Id = ids[1].ToString(), Name = "Mouse", PriceInCents = 1999, StarsTimesTen = 40, ImageUrl = "https://example.com/mouse.jpg" }
+            new()
+            {
+                Id = ids[0].ToString(), Name = "Laptop", PriceInCents = 99999, StarsTimesTen = 46,
+                ImageUrl = "https://example.com/laptop.jpg"
+            },
+            new()
+            {
+                Id = ids[1].ToString(), Name = "Mouse", PriceInCents = 1999, StarsTimesTen = 40,
+                ImageUrl = "https://example.com/mouse.jpg"
+            }
         };
         _mockRepository.Setup(r => r.GetAsync(ids)).ReturnsAsync(expectedProducts);
 
@@ -85,8 +94,8 @@ public class ProductServiceTests
     public async Task GetAsync_WithIdList_ReturnsEmptyList_WhenNoProductsFound()
     {
         // Arrange
-        var ids = new List<Guid> 
-        { 
+        var ids = new List<Guid>
+        {
             Guid.Parse("68dd3a02-f6f8-832c-a715-2d9902a28601")
         };
         var emptyList = new List<Product>();
@@ -105,23 +114,31 @@ public class ProductServiceTests
     public async Task SearchAsync_ReturnsPagedProducts()
     {
         // Arrange
-        var searchRequest = new SearchRequest 
-        { 
+        var searchRequest = new SearchRequest
+        {
             q = "brush",
             filter_by = "{\"categories\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
             sort_by = null,
-            page = 1, 
-            per_page = 12, 
+            page = 1,
+            per_page = 12
         };
-        var expectedViewModel = new PaginationViewModel<Product>
+        var expectedViewModel = new PaginationDto<Product>
         {
             found = 2,
             page = 1,
-            hits = new List<Product>
-            {
-                new() { Id = "1", Name = "Gaming Laptop", PriceInCents = 129999, StarsTimesTen = 48, ImageUrl = "https://example.com/laptop.jpg" },
-                new() { Id = "2", Name = "Business Laptop", PriceInCents = 89999, StarsTimesTen = 46, ImageUrl = "https://example.com/laptop.jpg" },
-            },
+            hits =
+            [
+                new Product
+                {
+                    Id = "1", Name = "Gaming Laptop", PriceInCents = 129999, StarsTimesTen = 48,
+                    ImageUrl = "https://example.com/laptop.jpg"
+                },
+                new Product
+                {
+                    Id = "2", Name = "Business Laptop", PriceInCents = 89999, StarsTimesTen = 46,
+                    ImageUrl = "https://example.com/laptop.jpg"
+                }
+            ],
             request_params = new RequestParams
             {
                 per_page = 12,
@@ -129,10 +146,10 @@ public class ProductServiceTests
             }
         };
         _mockRepository.Setup(r => r.SearchAsync(searchRequest)).ReturnsAsync(expectedViewModel);
-    
+
         // Act
         var result = await _productService.SearchAsync(searchRequest);
-    
+
         // Assert
         result.Should().BeEquivalentTo(expectedViewModel);
         _mockRepository.Verify(r => r.SearchAsync(searchRequest), Times.Once);
@@ -142,15 +159,15 @@ public class ProductServiceTests
     public async Task SearchAsync_ReturnsEmptyResult_WhenNoProductsMatch()
     {
         // Arrange
-        var searchRequest = new SearchRequest 
-        { 
+        var searchRequest = new SearchRequest
+        {
             q = "nonexistent",
             filter_by = "{\"categories\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
             sort_by = null,
-            page = 1, 
-            per_page = 12, 
+            page = 1,
+            per_page = 12
         };
-        var expectedViewModel = new PaginationViewModel<Product>
+        var expectedViewModel = new PaginationDto<Product>
         {
             found = 0,
             page = 1,
@@ -162,10 +179,10 @@ public class ProductServiceTests
             }
         };
         _mockRepository.Setup(r => r.SearchAsync(searchRequest)).ReturnsAsync(expectedViewModel);
-    
+
         // Act
         var result = await _productService.SearchAsync(searchRequest);
-    
+
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result.hits);

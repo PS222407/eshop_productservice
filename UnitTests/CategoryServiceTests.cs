@@ -1,6 +1,6 @@
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
-using eshop_productservice.Projections;
 using eshop_productservice.Services;
 using eshop_productservice.ViewModels;
 using FluentAssertions;
@@ -10,8 +10,8 @@ namespace UnitTests;
 
 public class CategoryServiceTests
 {
-    private readonly Mock<ICategoryRepository> _mockRepository;
     private readonly CategoryService _categoryService;
+    private readonly Mock<ICategoryRepository> _mockRepository;
 
     public CategoryServiceTests()
     {
@@ -23,7 +23,7 @@ public class CategoryServiceTests
     public async Task GetAsync_ReturnsAllCategories()
     {
         // Arrange
-        var repositoryCategories = new List<CategoryWithProductCountProjection>
+        var repositoryCategories = new List<CategoryWithProductCountDto>
         {
             new() { Id = "68dd3a02-f6f8-832c-a715-2d9902a28601", Name = "Electronics", Count = 3 },
             new() { Id = "68dcde78-e9e0-8322-b735-ee59674a4cff", Name = "Books", Count = 23 }
@@ -48,15 +48,14 @@ public class CategoryServiceTests
     {
         // Arrange
         var categoryId = new Guid("68dd3a02-f6f8-832c-a715-2d9902a28601");
-        var expectedCategory = new CategoryViewModel { Id = categoryId.ToString(), Name = "Electronics" };
-        var repositoryCategory = new Category { Id = categoryId, Name = "Electronics" };
-        _mockRepository.Setup(r => r.GetAsync(categoryId.ToString())).ReturnsAsync(repositoryCategory);
+        var category = new Category { Id = categoryId, Name = "Electronics" };
+        _mockRepository.Setup(r => r.GetAsync(categoryId.ToString())).ReturnsAsync(category);
 
         // Act
         var result = await _categoryService.Get(categoryId.ToString());
 
         // Assert
-        result.Should().BeEquivalentTo(expectedCategory);
+        result.Should().BeEquivalentTo(category);
         _mockRepository.Verify(r => r.GetAsync(categoryId.ToString()), Times.Once);
     }
 

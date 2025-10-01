@@ -1,4 +1,5 @@
 using eshop_productservice.Controllers;
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
 using eshop_productservice.Requests;
@@ -11,8 +12,8 @@ namespace UnitTests;
 
 public class ProductControllerTests
 {
-    private readonly Mock<IProductService> _mockProductService;
     private readonly ProductController _controller;
+    private readonly Mock<IProductService> _mockProductService;
 
     public ProductControllerTests()
     {
@@ -25,13 +26,16 @@ public class ProductControllerTests
     {
         // Arrange
         var request = new SearchRequest { q = "test", page = 1, per_page = 10 };
-        var expected = new PaginationViewModel<Product>
+        var expected = new PaginationDto<Product>
         {
             found = 1,
             page = 1,
             hits =
             [
-                new Product { Id = "1", Name = "Test Product", PriceInCents = 1000, ImageUrl = "url", StarsTimesTen = 50 }
+                new Product
+                {
+                    Id = "1", Name = "Test Product", PriceInCents = 1000, ImageUrl = "url", StarsTimesTen = 50
+                }
             ],
             request_params = new RequestParams { per_page = 10, q = "test" }
         };
@@ -51,7 +55,8 @@ public class ProductControllerTests
     public async Task Get_ReturnsProduct()
     {
         // Arrange
-        var product = new Product { Id = "1", Name = "Test Product", PriceInCents = 1000, ImageUrl = "url", StarsTimesTen = 50 };
+        var product = new Product
+            { Id = "1", Name = "Test Product", PriceInCents = 1000, ImageUrl = "url", StarsTimesTen = 50 };
         _mockProductService.Setup(s => s.GetAsync("1")).ReturnsAsync(product);
 
         // Act
@@ -86,8 +91,14 @@ public class ProductControllerTests
         var request = new ProductBatchRequest { Ids = ids };
         var products = new List<Product>
         {
-            new() { Id = ids[0].ToString(), Name = "Product 1", PriceInCents = 100, ImageUrl = "url1", StarsTimesTen = 40 },
-            new() { Id = ids[1].ToString(), Name = "Product 2", PriceInCents = 200, ImageUrl = "url2", StarsTimesTen = 80 }
+            new()
+            {
+                Id = ids[0].ToString(), Name = "Product 1", PriceInCents = 100, ImageUrl = "url1", StarsTimesTen = 40
+            },
+            new()
+            {
+                Id = ids[1].ToString(), Name = "Product 2", PriceInCents = 200, ImageUrl = "url2", StarsTimesTen = 80
+            }
         };
         _mockProductService.Setup(s => s.GetAsync(ids)).ReturnsAsync(products);
 

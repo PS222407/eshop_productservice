@@ -1,5 +1,6 @@
 using eshop_productservice.Data;
 using eshop_productservice.DataModel;
+using eshop_productservice.DTOs;
 using eshop_productservice.Interfaces;
 using eshop_productservice.Models;
 using eshop_productservice.Requests;
@@ -11,12 +12,6 @@ namespace eshop_productservice.Repositories;
 
 public class ProductRepositoryPostgres(AppDbContext context) : IProductRepository
 {
-    public async Task<List<Product>> GetAsync()
-    {
-        return (await context.Products.ToListAsync())
-            .Select(p => p.ToModel()).ToList();
-    }
-
     public async Task<Product?> GetAsync(string id)
     {
         var guid = new Guid(id);
@@ -32,32 +27,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
             .ToListAsync();
     }
 
-    public async Task CreateAsync(Product product)
-    {
-        var productPdb = product.ToProductPdb();
-
-        context.Products.Add(productPdb);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync(string id, Product product)
-    {
-        var productPdb = product.ToProductPdb();
-
-        context.Entry(productPdb).State = EntityState.Modified;
-        await context.SaveChangesAsync();
-    }
-
-    public async Task RemoveAsync(string id)
-    {
-        var guid = new Guid(id);
-        var product = await context.Products.FindAsync(guid);
-        if (product == null) return;
-        context.Products.Remove(product);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task<PaginationViewModel<Product>> SearchAsync(SearchRequest searchRequest)
+    public async Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest)
     {
         var query = BuildSearchQuery(searchRequest);
 
@@ -71,7 +41,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
 
         var found = await SearchCountAsync(searchRequest);
 
-        return new PaginationViewModel<Product>
+        return new PaginationDto<Product>
         {
             found = found,
             page = searchRequest.page,
@@ -90,7 +60,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         return await query.CountAsync();
     }
 
-    private IQueryable<ProductPdb> BuildSearchQuery(SearchRequest searchRequest)
+    private IQueryable<ProductDataModel> BuildSearchQuery(SearchRequest searchRequest)
     {
         dynamic? filters = searchRequest.filter_by == null
             ? null
@@ -107,7 +77,6 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
 
             // query = query.Where(p => p.Name.ToLower().Contains(searchRequest.q.ToLower().Trim()));
         }
-
 
         if (categoryId != null)
             query = query.Where(p => p.CategoryId == new Guid(categoryId));

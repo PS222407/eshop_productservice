@@ -2,7 +2,7 @@ using eshop_productservice.Models;
 
 namespace eshop_productservice.DataModel;
 
-public class ProductPdb
+public class ProductDataModel
 {
     public Guid Id { get; set; }
 

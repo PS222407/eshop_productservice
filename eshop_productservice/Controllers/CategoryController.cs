@@ -11,7 +11,12 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     [HttpGet]
     public async Task<ActionResult<List<CategoryViewModel>>> Index()
     {
-        return Ok(await categoryService.Get());
+        return Ok((await categoryService.Get()).Select(c => new CategoryViewModel
+        {
+            Id = c.Id,
+            Name = c.Name,
+            Count = c.Count
+        }).ToList());
     }
 
     [HttpGet("{id}")]
@@ -20,6 +25,11 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
         var category = await categoryService.Get(id);
         if (category == null)
             return NotFound();
-        return Ok(category);
+
+        return Ok(new CategoryViewModel
+        {
+            Id = category.Id.ToString(),
+            Name = category.Name
+        });
     }
 }
