@@ -1,0 +1,73 @@
+name: CodeCoverage
+
+permissions:
+  pull-requests: write
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    
+    runs-on: ubuntu-latest
+        
+    steps:
+      -   name: Checkout
+          uses: actions/checkout@v4
+
+      -   name: Setup .NET
+          id: setup-dotnet
+          uses: actions/setup-dotnet@v3
+          with:
+            dotnet-version: '9.0.x'
+      -   name: Restore
+          run: dotnet restore
+      -   name: Build
+          run: dotnet build --no-restore
+
+      -   name: Run tests and generate coverage reports
+          run: |
+            dotnet test --collect:"XPlat Code Coverage" --results-directory:"xplat"
+            mkdir -p coverage/1
+            mkdir -p coverage/2
+            mv ./xplat/*/coverage.cobertura.xml ./coverage/1 2>/dev/null || true
+            mv ./xplat/*/coverage.cobertura.xml ./coverage/2 2>/dev/null || true
+
+      -   name: Html and markdown report
+          uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
+          with:
+            reports: './coverage/1/coverage.cobertura.xml;./coverage/2/coverage.cobertura.xml'
+            targetdir: 'coveragereport'
+            reporttypes: 'HtmlInline;MarkdownSummaryGithub;Cobertura'
+            verbosity: 'Info'
+            title: 'AuctionAPI Coverage Report'
+            tag: '${{ github.run_number }}_${{ github.run_id }}'
+            toolpath: 'reportgeneratortool'
+
+      -   name: Save html and markdown report artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: html-markdown-coverage-report
+            path: coveragereport
+
+      -   name: Add Coverage PR Comment
+          uses: marocchino/sticky-pull-request-comment@v2.9.0
+          if: github.event_name == 'pull_request'
+          with:
+            header: Coverage Report
+            path: ./coveragereport/SummaryGithub.md
+
+      -   name: Write to Job Summary
+          run: cat ./coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+
+#      -   name: coveralls
+#          uses: coverallsapp/github-action@v2.2.3
+#          with:
+#            github-token: ${{secrets.GITHUB_TOKEN }}
+#            format: cobertura
+#            files: './coverage/1/coverage.cobertura.xml ./coverage/2/coverage.cobertura.xml'
