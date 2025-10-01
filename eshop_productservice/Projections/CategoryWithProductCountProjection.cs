@@ -1,6 +1,6 @@
 namespace eshop_productservice.Projections;
 
-public class CategoryWithProductCount
+public class CategoryWithProductCountProjection
 {
     public string Id { get; set; }
 

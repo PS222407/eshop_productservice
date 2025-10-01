@@ -3,7 +3,7 @@ using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
 
-public class CategoryService(ICategoryRepository repository)
+public class CategoryService(ICategoryRepository repository) : ICategoryService
 {
     public async Task<List<CategoryViewModel>> Get()
     {

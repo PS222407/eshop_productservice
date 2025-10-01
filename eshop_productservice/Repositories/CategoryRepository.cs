@@ -8,10 +8,10 @@ namespace eshop_productservice.Repositories;
 
 public class CategoryRepository(AppDbContext context) : ICategoryRepository
 {
-    public async Task<List<CategoryWithProductCount>> GetAsync()
+    public async Task<List<CategoryWithProductCountProjection>> GetAsync()
     {
         return await context.Categories.OrderBy(c => c.Name)
-            .Select(c => new CategoryWithProductCount
+            .Select(c => new CategoryWithProductCountProjection
             {
                 Id = c.Id.ToString(),
                 Name = c.Name,

@@ -23,7 +23,7 @@ public class CategoryServiceTests
     public async Task GetAsync_ReturnsAllCategories()
     {
         // Arrange
-        var repositoryCategories = new List<CategoryWithProductCount>
+        var repositoryCategories = new List<CategoryWithProductCountProjection>
         {
             new() { Id = "68dd3a02-f6f8-832c-a715-2d9902a28601", Name = "Electronics", Count = 3 },
             new() { Id = "68dcde78-e9e0-8322-b735-ee59674a4cff", Name = "Books", Count = 23 }

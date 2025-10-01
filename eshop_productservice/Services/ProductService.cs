@@ -5,7 +5,7 @@ using eshop_productservice.ViewModels;
 
 namespace eshop_productservice.Services;
 
-public class ProductService(IProductRepository repository)
+public class ProductService(IProductRepository repository) : IProductService
 {
     public async Task<Product?> GetAsync(string id)
     {
