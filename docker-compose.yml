@@ -1,47 +1,59 @@
 services:
-  postgres:
+  postgres_userservice:
     image: postgres:17
-    container_name: eshop-postgres
+    container_name: eshop-postgres-userservice
+    restart: on-failure
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/17/docker
+    volumes:
+      - ./data_postgres_userservice:/var/lib/postgresql/17/docker
+
+  postgres_productservice:
+    image: postgres:17
+    container_name: eshop-postgres-productservice
     restart: on-failure
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_PASSWORD=postgres
       - PGDATA=/var/lib/postgresql/17/docker
     volumes:
-      - ./data_postgres:/var/lib/postgresql/17/docker
+      - ./data_postgres_productservice:/var/lib/postgresql/17/docker
   
-  # login (system: PostgreSQL, server: postgres, username: postgres, password: mysecretpassword, database: postgres)
+  # login (system: PostgreSQL, server: postgres, username: postgres, password: postgres, database: postgres)
   adminer:
     image: adminer
     restart: on-failure
     ports:
       - "8082:8080"
   
-  mysql:
-    image: mysql:8.0.36
-    container_name: eshop-mysql
-    restart: on-failure
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-    volumes:
-      - ./data:/var/lib/mysql
+  # mysql:
+  #   image: mysql:8.0.36
+  #   container_name: eshop-mysql
+  #   restart: on-failure
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=password
+  #     - MYSQL_USER=user
+  #     - MYSQL_PASSWORD=password
+  #   volumes:
+  #     - ./data:/var/lib/mysql
 
-  phpmyadmin:
-    image: jensr22/phpmyadmin:latest
-    container_name: eshop-phpmyadmin
-    restart: on-failure
-    ports:
-      - "8080:80"
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mysql
-      - PMA_USER=root
-      - PMA_PASSWORD=password
+  # phpmyadmin:
+  #   image: jensr22/phpmyadmin:latest
+  #   container_name: eshop-phpmyadmin
+  #   restart: on-failure
+  #   ports:
+  #     - "8080:80"
+  #   environment:
+  #     - PMA_ARBITRARY=1
+  #     - PMA_HOST=mysql
+  #     - PMA_USER=root
+  #     - PMA_PASSWORD=password
 
   mongodb:
     image: mongo:8.0
@@ -109,7 +121,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx-proxy
+    container_name: eshop-nginx-proxy
     restart: on-failure
     ports:
       - "80:80"
