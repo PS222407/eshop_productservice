@@ -127,3 +127,23 @@ services:
       - "80:80"
     volumes:
       - ./dockerFiles/nginx.conf:/etc/nginx/conf.d/default.conf
+  
+  typesense:
+    image: typesense/typesense:29.0
+    container_name: eshop-productservice-typesense
+    restart: on-failure
+    volumes:
+      - ./typesense-data:/data
+    ports:
+      - 8108:8108
+    #For production remove interval this will default to 3600 seconds
+    command: '--data-dir /data --api-key=xyz --enable-cors --cors-domains=http://localhost:8188 --enable-search-analytics=true --analytics-dir=/data/analytics --analytics-flush-interval=60'
+
+  typesense_dashboard:
+    image: ghcr.io/bfritscher/typesense-dashboard:latest
+    container_name: eshop-productservice-typesense_dashboard
+    restart: on-failure
+    volumes:
+      - ./typesense-dashboard/config.json:/srv/config.json
+    ports:
+      - 8188:80

@@ -6,3 +6,9 @@ riderModule.iml
 /_ReSharper.Caches/
 data
 appsettings.*.json
+typesense-data
+*.patch
+eshop_productservice.sln.DotSettings.user
+eshop_productservice.tar
+eshop_productservice/CSV/amazon_categories.csv
+eshop_productservice/CSV/amazon_products.csv

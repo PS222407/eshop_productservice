@@ -11,4 +11,6 @@ public interface IProductRepository
     public Task<List<Product>> GetAsync(List<Guid> ids);
 
     public Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest);
+    
+    public Task<List<Product>> Get();
 }

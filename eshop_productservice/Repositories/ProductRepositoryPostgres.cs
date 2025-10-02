@@ -54,6 +54,11 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         };
     }
 
+    public async Task<List<Product>> Get()
+    {
+        return await context.Products.Select(p => p.ToModel()).ToListAsync();
+    }
+
     private async Task<int> SearchCountAsync(SearchRequest searchRequest)
     {
         var query = BuildSearchQuery(searchRequest);

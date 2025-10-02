@@ -3,6 +3,8 @@ namespace eshop_productservice.Models;
 public class Product
 {
     public string? Id { get; set; }
+    
+    public string? CategoryId { get; set; }
 
     public required string Name { get; set; }
 

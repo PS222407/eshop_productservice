@@ -23,6 +23,7 @@ public class ProductDataModel
         return new Product
         {
             Id = Id.ToString(),
+            CategoryId = CategoryId.ToString(),
             Name = Name,
             PriceInCents = PriceInCents,
             StarsTimesTen = StarsTimesTen,
