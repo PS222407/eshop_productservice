@@ -11,13 +11,15 @@ namespace UnitTests;
 
 public class ProductServiceTests
 {
-    private readonly Mock<IProductRepository> _mockRepository;
+    private readonly Mock<IProductRepository> _mockProductRepository;
+    private readonly Mock<ISearchRepository> _mockSearchRepository;
     private readonly ProductService _productService;
 
     public ProductServiceTests()
     {
-        _mockRepository = new Mock<IProductRepository>();
-        _productService = new ProductService(_mockRepository.Object);
+        _mockProductRepository = new Mock<IProductRepository>();
+        _mockSearchRepository = new Mock<ISearchRepository>();
+        _productService = new ProductService(_mockProductRepository.Object, _mockSearchRepository.Object);
     }
 
     [Fact]
@@ -33,29 +35,29 @@ public class ProductServiceTests
             StarsTimesTen = 46,
             ImageUrl = "https://example.com/laptop.jpg"
         };
-        _mockRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync(expectedProduct);
+        _mockProductRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync(expectedProduct);
 
         // Act
         var result = await _productService.GetAsync(productId);
 
         // Assert
         result.Should().BeEquivalentTo(expectedProduct);
-        _mockRepository.Verify(r => r.GetAsync(productId), Times.Once);
+        _mockProductRepository.Verify(r => r.GetAsync(productId), Times.Once);
     }
 
-    [Fact]
+    [Fact]   
     public async Task GetAsync_WithId_ReturnsNull_WhenProductNotFound()
     {
         // Arrange
         const string productId = "999";
-        _mockRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync((Product?)null);
+        _mockProductRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync((Product?)null);
 
         // Act
         var result = await _productService.GetAsync(productId);
 
         // Assert
         Assert.Null(result);
-        _mockRepository.Verify(r => r.GetAsync(productId), Times.Once);
+        _mockProductRepository.Verify(r => r.GetAsync(productId), Times.Once);
     }
 
     [Fact]
@@ -80,14 +82,14 @@ public class ProductServiceTests
                 ImageUrl = "https://example.com/mouse.jpg"
             }
         };
-        _mockRepository.Setup(r => r.GetAsync(ids)).ReturnsAsync(expectedProducts);
+        _mockProductRepository.Setup(r => r.GetAsync(ids)).ReturnsAsync(expectedProducts);
 
         // Act
         var result = await _productService.GetAsync(ids);
 
         // Assert
         result.Should().BeEquivalentTo(expectedProducts);
-        _mockRepository.Verify(r => r.GetAsync(ids), Times.Once);
+        _mockProductRepository.Verify(r => r.GetAsync(ids), Times.Once);
     }
 
     [Fact]
@@ -99,7 +101,7 @@ public class ProductServiceTests
             Guid.Parse("68dd3a02-f6f8-832c-a715-2d9902a28601")
         };
         var emptyList = new List<Product>();
-        _mockRepository.Setup(r => r.GetAsync(ids)).ReturnsAsync(emptyList);
+        _mockProductRepository.Setup(r => r.GetAsync(ids)).ReturnsAsync(emptyList);
 
         // Act
         var result = await _productService.GetAsync(ids);
@@ -107,7 +109,7 @@ public class ProductServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result);
-        _mockRepository.Verify(r => r.GetAsync(ids), Times.Once);
+        _mockProductRepository.Verify(r => r.GetAsync(ids), Times.Once);
     }
 
     [Fact]
@@ -117,7 +119,7 @@ public class ProductServiceTests
         var searchRequest = new SearchRequest
         {
             q = "brush",
-            filter_by = "{\"categories\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
+            filter_by = "{\"CategoryId\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
             sort_by = null,
             page = 1,
             per_page = 12
@@ -145,14 +147,14 @@ public class ProductServiceTests
                 q = "brush"
             }
         };
-        _mockRepository.Setup(r => r.SearchAsync(searchRequest)).ReturnsAsync(expectedViewModel);
+        _mockSearchRepository.Setup(r => r.Products(searchRequest)).ReturnsAsync(expectedViewModel);
 
         // Act
         var result = await _productService.SearchAsync(searchRequest);
 
         // Assert
         result.Should().BeEquivalentTo(expectedViewModel);
-        _mockRepository.Verify(r => r.SearchAsync(searchRequest), Times.Once);
+        _mockSearchRepository.Verify(r => r.Products(searchRequest), Times.Once);
     }
 
     [Fact]
@@ -162,7 +164,7 @@ public class ProductServiceTests
         var searchRequest = new SearchRequest
         {
             q = "nonexistent",
-            filter_by = "{\"categories\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
+            filter_by = "{\"CategoryId\": [\"019961f6-16b2-7aaf-8543-457fe1dbf084\"]}",
             sort_by = null,
             page = 1,
             per_page = 12
@@ -178,7 +180,7 @@ public class ProductServiceTests
                 q = "nonexistent"
             }
         };
-        _mockRepository.Setup(r => r.SearchAsync(searchRequest)).ReturnsAsync(expectedViewModel);
+        _mockSearchRepository.Setup(r => r.Products(searchRequest)).ReturnsAsync(expectedViewModel);
 
         // Act
         var result = await _productService.SearchAsync(searchRequest);
@@ -187,6 +189,6 @@ public class ProductServiceTests
         Assert.NotNull(result);
         Assert.Empty(result.hits);
         Assert.Equal(0, result.found);
-        _mockRepository.Verify(r => r.SearchAsync(searchRequest), Times.Once);
+        _mockSearchRepository.Verify(r => r.Products(searchRequest), Times.Once);
     }
 }

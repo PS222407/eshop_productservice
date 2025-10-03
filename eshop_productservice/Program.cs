@@ -41,6 +41,7 @@ builder.Services.AddTransient<IProductRepository, ProductRepositoryPostgres>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<ISearchRepository, SearchRepository>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
