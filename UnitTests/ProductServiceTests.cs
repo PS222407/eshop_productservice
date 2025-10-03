@@ -45,7 +45,7 @@ public class ProductServiceTests
         _mockProductRepository.Verify(r => r.GetAsync(productId), Times.Once);
     }
 
-    [Fact]   
+    [Fact]
     public async Task GetAsync_WithId_ReturnsNull_WhenProductNotFound()
     {
         // Arrange

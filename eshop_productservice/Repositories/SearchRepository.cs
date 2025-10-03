@@ -13,28 +13,27 @@ namespace eshop_productservice.Repositories;
 
 public class SearchRepository : ISearchRepository
 {
-    private readonly HttpClient _httpClient;
-    
-    private readonly string _baseUrl;
-
     private const string ProductsCollection = "Products";
-    
+
+    private readonly string _baseUrl;
+    private readonly HttpClient _httpClient;
+
     private readonly IProductRepository _productRepository;
 
     private readonly ITypesenseClient? _typesenseClient;
-    
+
     public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository)
     {
         var host = configuration.GetValue<string>("TypeSense:Host") ?? throw new InvalidOperationException();
         var apiKey = configuration.GetValue<string>("TypeSense:ApiKey") ?? throw new InvalidOperationException();
         var protocol = configuration.GetValue<string>("TypeSense:Protocol") ?? throw new InvalidOperationException();
         var port = configuration.GetValue<string>("TypeSense:Port") ?? throw new InvalidOperationException();
-        
+
         _httpClient = new HttpClient();
         _baseUrl = $"{protocol}://{host}:{port}";
         _httpClient.DefaultRequestHeaders.Add("X-TYPESENSE-API-KEY", apiKey);
         _productRepository = productProductRepository;
-        
+
 
         var provider = new ServiceCollection()
             .AddTypesenseClient(config =>
@@ -44,10 +43,10 @@ public class SearchRepository : ISearchRepository
                 {
                     new(host, port, protocol)
                 };
-            }, enableHttpCompression: false).BuildServiceProvider();
+            }, false).BuildServiceProvider();
         _typesenseClient = provider.GetService<ITypesenseClient>();
     }
-    
+
     public async Task<PaginationDto<Product>> Products(SearchRequest searchRequest)
     {
         var filterByJsonString = searchRequest.filter_by;
@@ -65,7 +64,7 @@ public class SearchRepository : ISearchRepository
             searchParams.Where(s => s.Value != null)
                 .Select(s => $"{Uri.EscapeDataString(s.Key)}={Uri.EscapeDataString(s.Value!)}"));
         var url = $"{_baseUrl}/collections/{ProductsCollection}/documents/search?{queryString}";
-        
+
         var response = await _httpClient.GetAsync(url);
         var jsonString = await response.Content.ReadAsStringAsync();
         var searchResult = JsonSerializer.Deserialize<SearchResult<ProductSearchModel>>(jsonString)!;
@@ -105,7 +104,7 @@ public class SearchRepository : ISearchRepository
                 new("Name", FieldType.String, false, null, true),
                 new("PriceInCents", FieldType.Int32, false, null, true),
                 new("StarsTimesTen", FieldType.Int32, false, null, true),
-                new("ImgUrl", FieldType.String),
+                new("ImgUrl", FieldType.String)
             });
 
         var createCollectionResult = await _typesenseClient.CreateCollection(schema);
@@ -127,7 +126,7 @@ public class SearchRepository : ISearchRepository
             ImgUrl = p.ImageUrl
         });
 
-        Int32 index = 0;
+        var index = 0;
         var chunked = productSearchModels.Chunk(10000);
         Console.WriteLine(productSearchModels.Count());
         foreach (var chunk in chunked)
@@ -150,14 +149,12 @@ public class SearchRepository : ISearchRepository
         var parts = new List<string>();
 
         foreach (var kvp in node)
-        {
             if (kvp.Value is JsonArray array)
             {
                 var values = array.Select(v => $"{v}");
-                string filter = $"{kvp.Key}:=[{string.Join(", ", values)}]";
+                var filter = $"{kvp.Key}:=[{string.Join(", ", values)}]";
                 parts.Add(filter);
             }
-        }
 
         return string.Join(" && ", parts);
     }

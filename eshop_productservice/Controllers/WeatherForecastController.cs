@@ -105,4 +105,3 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     //     return Ok("hoi");
     // }
 }
-
