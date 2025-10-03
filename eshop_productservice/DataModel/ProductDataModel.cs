@@ -18,6 +18,8 @@ public class ProductDataModel
 
     public string ImgUrl { get; set; }
 
+    public int Stock { get; set; }
+
     public Product ToModel()
     {
         return new Product
@@ -27,7 +29,8 @@ public class ProductDataModel
             Name = Name,
             PriceInCents = PriceInCents,
             StarsTimesTen = StarsTimesTen,
-            ImageUrl = ImgUrl
+            ImageUrl = ImgUrl,
+            Stock = Stock
         };
     }
 }

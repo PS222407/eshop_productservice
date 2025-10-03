@@ -13,4 +13,6 @@ public class Product
     public required string ImageUrl { get; set; }
 
     public required int StarsTimesTen { get; set; }
+    
+    public int Stock { get; set; }
 }
