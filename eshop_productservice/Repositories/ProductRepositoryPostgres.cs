@@ -71,7 +71,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
             ? null
             : JsonConvert.DeserializeObject(searchRequest.filter_by);
 
-        string? categoryId = filters?.categories[0];
+        string? categoryId = filters?.CategoryId[0];
 
         var query = context.Products.AsQueryable();
         if (!string.IsNullOrWhiteSpace(searchRequest.q))
