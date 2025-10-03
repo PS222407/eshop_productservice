@@ -69,7 +69,7 @@ kind: Deployment
 metadata:
   name: userservice-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: userservice
@@ -90,6 +90,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: userservice-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
 ---
 # -------------------------------
 # userservice Service
@@ -106,7 +113,28 @@ spec:
       port: 80
       targetPort: 8080
   type: ClusterIP
-
+---
+# -------------------------------
+# userservice HPA
+# -------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: userservice-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: userservice-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ---
 # -------------------------------
 # productservice Deployment
@@ -116,7 +144,7 @@ kind: Deployment
 metadata:
   name: productservice-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: productservice
@@ -137,6 +165,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: productservice-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
 ---
 # -------------------------------
 # productservice Service
@@ -155,6 +190,41 @@ spec:
   type: ClusterIP
 ---
 # -------------------------------
+# productservice HPA
+# -------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: productservice-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: productservice-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 1 # default is 300 (5 minutes)
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 1
+    scaleUp:
+      stabilizationWindowSeconds: 0 # react immediately to load
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 1
+---
+# -------------------------------
 # cartservice Deployment
 # -------------------------------
 apiVersion: apps/v1
@@ -162,7 +232,7 @@ kind: Deployment
 metadata:
   name: cartservice-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: cartservice
@@ -183,6 +253,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: cartservice-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
 ---
 # -------------------------------
 # cartservice Service
@@ -199,6 +276,28 @@ spec:
       port: 80
       targetPort: 8080
   type: ClusterIP
+---
+# -------------------------------
+# cartservice HPA
+# -------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cartservice-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cartservice-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ---
 # -------------------------------
 # Ingress for path routing
