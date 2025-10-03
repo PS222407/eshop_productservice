@@ -26,4 +26,5 @@ README.md
 
 data
 data_kafka
-data_postgres
+data_postgres_productservice
+data_postgres_userservice

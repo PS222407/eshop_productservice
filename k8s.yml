@@ -6,15 +6,17 @@ kind: ConfigMap
 metadata:
   name: productservice-config
 data:
+  FrontendUrl: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
+  TypeSense__Host: "host.minikube.internal"
+  TypeSense__ApiKey: "xyz"
+  TypeSense__Protocol: "http"
+  TypeSense__Port: "8108"
   Kafka__Server: "host.minikube.internal:9095"
-  ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5432;Database=eshop_productservice;Username=postgres;Password=mysecretpassword;"
-  eshop_productservice__ConnectionString: "mongodb://host.minikube.internal:27017"
-  eshop_productservice__DatabaseName: "eshop_productservice"
-  eshop_productservice__ProductsCollectionName: "Products"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
   Jwt__ExpiresIn: "3600"
+  ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5432;Database=eshop_productservice;Username=postgres;Password=postgres;"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft.AspNetCore: "Warning"
   AllowedHosts: "*"
@@ -27,11 +29,12 @@ kind: ConfigMap
 metadata:
   name: userservice-config
 data:
+  ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5433;Database=eshop_userservice;Username=postgres;Password=postgres;"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
   Jwt__ExpiresIn: "3600"
-  ConnectionStrings__DefaultConnection: "Server=host.minikube.internal;Port=3306;Database=eshop_userservice;User ID=root;Password=password;"
+  Jwt__RefreshTokenExpiresIn: "2592000"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft.AspNetCore: "Warning"
   AllowedHosts: "*"
@@ -44,12 +47,16 @@ kind: ConfigMap
 metadata:
   name: cartservice-config
 data:
+  ApiUrl: "http://productservice-service"
   Kafka__Server: "host.minikube.internal:9095"
   Kafka__GroupId: "cartservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
   Jwt__ExpiresIn: "3600"
+  eshop_cartservice__ConnectionString: "mongodb://host.minikube.internal:27017"
+  eshop_cartservice__DatabaseName: "eshop_cartservice"
+  eshop_cartservice__CartItemsCollectionName: "CartItems"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft.AspNetCore: "Warning"
   AllowedHosts: "*"
