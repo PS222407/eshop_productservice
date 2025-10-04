@@ -53,11 +53,9 @@ jobs:
       - name: Run tests and generate coverage reports
         run: |
           dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat"
-          mkdir -p coverage/1
-          mkdir -p coverage/2
-          mv ./xplat/*/coverage.cobertura.xml ./coverage/1 2>/dev/null || true
-          mv ./xplat/*/coverage.cobertura.xml ./coverage/2 2>/dev/null || true
-      
+          New-Item -ItemType Directory -Path .\coverage\1 -Force
+          Move-Item -Path .\xplat\*\coverage.cobertura.xml -Destination .\coverage\1\
+
       - name: Analyze coverage reports with SonarQube Cloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,28 +1,28 @@
-name: ReSharper
-
-on:
-  push:
-    branches: [ "main" ]
-#  pull_request:
+#name: ReSharper
+#
+#on:
+#  push:
 #    branches: [ "main" ]
-
-jobs:
-  build:
-    
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup .NET
-        id: setup-dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '9.0.x'
-      - name: Restore
-        run: dotnet restore
-      - name: ReSharper CLI InspectCode
-        uses: muno92/resharper_inspectcode@1.6.0
-        with:
-          solutionPath: ./eshop_productservice.sln
-          minimumSeverity: 'error'
+##  pull_request:
+##    branches: [ "main" ]
+#
+#jobs:
+#  build:
+#    
+#    runs-on: ubuntu-latest
+#    
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#      - name: Setup .NET
+#        id: setup-dotnet
+#        uses: actions/setup-dotnet@v3
+#        with:
+#          dotnet-version: '9.0.x'
+#      - name: Restore
+#        run: dotnet restore
+#      - name: ReSharper CLI InspectCode
+#        uses: muno92/resharper_inspectcode@1.6.0
+#        with:
+#          solutionPath: ./eshop_productservice.sln
+#          minimumSeverity: 'error'
