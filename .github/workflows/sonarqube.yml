@@ -52,6 +52,7 @@ jobs:
         run: dotnet build --no-incremental
       - name: Run tests and generate coverage reports
         run: |
+          dotnet tool install --global coverlet.console
           coverlet .\UnitTests\bin\Debug\net9.0\UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
       - name: Save report artifact
         uses: actions/upload-artifact@v4
