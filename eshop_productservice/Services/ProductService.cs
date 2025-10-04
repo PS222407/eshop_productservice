@@ -5,7 +5,8 @@ using eshop_productservice.Requests;
 
 namespace eshop_productservice.Services;
 
-public class ProductService(IProductRepository repository) : IProductService
+public class ProductService(IProductRepository repository, ISearchRepository searchRepository)
+    : IProductService
 {
     public async Task<Product?> GetAsync(string id)
     {
@@ -19,6 +20,16 @@ public class ProductService(IProductRepository repository) : IProductService
 
     public async Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest)
     {
-        return await repository.SearchAsync(searchRequest);
+        return await searchRepository.Products(searchRequest);
+    }
+
+    public async Task CreateCollection()
+    {
+        await searchRepository.CreateProductsCollection();
+    }
+
+    public async Task ImportProducts()
+    {
+        await searchRepository.ImportProducts();
     }
 }

@@ -11,4 +11,8 @@ public interface IProductService
     public Task<List<Product>> GetAsync(List<Guid> ids);
 
     public Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest);
+
+    public Task CreateCollection();
+
+    public Task ImportProducts();
 }

@@ -20,10 +20,12 @@ dotnet run --project eshop_productservice/eshop_productservice.csproj
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
-docker cp eshop_productservice/CSV/Products.sql eshop-postgres:/Products.sql
+docker cp eshop_productservice/CSV/Categories.sql eshop-postgres-productservice:/Categories.sql && \
+docker cp eshop_productservice/CSV/Products.sql eshop-postgres-productservice:/Products.sql
 ```
 ```bash
-docker exec -it eshop-postgres psql -U postgres -d eshop_productservice -f /Products.sql
+docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
+docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Products.sql
 ```
 
 ## Create indexes

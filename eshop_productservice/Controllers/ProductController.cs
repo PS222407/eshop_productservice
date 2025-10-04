@@ -44,4 +44,18 @@ public class ProductController(IProductService productService) : ControllerBase
 
         return Ok(products);
     }
+
+    [HttpGet("CreateCollection")]
+    public async Task<ActionResult> CreateCollection()
+    {
+        await productService.CreateCollection();
+        return Ok();
+    }
+
+    [HttpGet("ImportProducts")]
+    public async Task<ActionResult> ImportProducts()
+    {
+        await productService.ImportProducts();
+        return Ok();
+    }
 }

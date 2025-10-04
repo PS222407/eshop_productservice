@@ -18,15 +18,19 @@ public class ProductDataModel
 
     public string ImgUrl { get; set; }
 
+    public int Stock { get; set; }
+
     public Product ToModel()
     {
         return new Product
         {
             Id = Id.ToString(),
+            CategoryId = CategoryId.ToString(),
             Name = Name,
             PriceInCents = PriceInCents,
             StarsTimesTen = StarsTimesTen,
-            ImageUrl = ImgUrl
+            ImageUrl = ImgUrl,
+            Stock = Stock
         };
     }
 }

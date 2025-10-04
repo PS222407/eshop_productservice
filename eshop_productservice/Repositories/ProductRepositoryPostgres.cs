@@ -54,6 +54,11 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         };
     }
 
+    public async Task<List<Product>> Get()
+    {
+        return await context.Products.Select(p => p.ToModel()).ToListAsync();
+    }
+
     private async Task<int> SearchCountAsync(SearchRequest searchRequest)
     {
         var query = BuildSearchQuery(searchRequest);
@@ -66,7 +71,7 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
             ? null
             : JsonConvert.DeserializeObject(searchRequest.filter_by);
 
-        string? categoryId = filters?.categories[0];
+        string? categoryId = filters?.CategoryId[0];
 
         var query = context.Products.AsQueryable();
         if (!string.IsNullOrWhiteSpace(searchRequest.q))
