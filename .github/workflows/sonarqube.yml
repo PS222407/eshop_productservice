@@ -48,24 +48,22 @@ jobs:
           dotnet-version: 9.0.x
       - name: Restore dependencies
         run: dotnet restore
-#      - name: Build
-#        run: dotnet build --no-incremental
-#      - name: Run tests and generate coverage reports
-#        run: |
-#          dotnet test --settings coverlet.runsettings --collect "Code Coverage"
-#      # dotnet tool install --global coverlet.console
-#      # coverlet .\UnitTests\bin\Debug\net9.0\UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
-#      - name: Save report artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: coverage-report
-#          path: coverage.xml
+      - name: Build
+        run: dotnet build --no-incremental
+      - name: Run tests and generate coverage reports
+        run: |
+          dotnet tool install --global coverlet.console
+          coverlet .\UnitTests\bin\Debug\net9.0\UnitTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+      - name: Save report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
       - name: Analyze coverage reports with SonarQube Cloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"PS222407_eshop_productservice" /o:"ps222407" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build --no-incremental
-          dotnet test --settings coverlet.runsettings --collect "Code Coverage"
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"PS222407_eshop_productservice" /o:"ps222407" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          dotnet build
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
