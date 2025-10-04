@@ -5,7 +5,7 @@ on:
       - main
       - develop
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 jobs:
   build:
     name: Build and analyze
@@ -38,11 +38,31 @@ jobs:
         run: |
           New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
-      - name: Build and analyze
+      
+      # Run tests and generate coverage reports
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Run tests and generate coverage reports
+        run: |
+          dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat"
+          mkdir -p coverage/1
+          mkdir -p coverage/2
+          mv ./xplat/*/coverage.cobertura.xml ./coverage/1 2>/dev/null || true
+          mv ./xplat/*/coverage.cobertura.xml ./coverage/2 2>/dev/null || true
+      
+      - name: Analyze coverage reports with SonarQube Cloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"PS222407_eshop_productservice" /o:"ps222407" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"PS222407_eshop_productservice" /o:"ps222407" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths=./coverage/1/coverage.cobertura.xml
           dotnet build
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
