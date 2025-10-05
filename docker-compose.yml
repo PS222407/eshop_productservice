@@ -37,6 +37,8 @@ services:
     restart: on-failure
     ports:
       - "27017:27017"
+    volumes:
+      - ./data_mongo/cartservice:/data/db
 
   compass-cartservice:
     image: haohanyang/compass-web
@@ -53,6 +55,8 @@ services:
     restart: on-failure
     ports:
       - "27018:27017"
+    volumes:
+      - ./data_mongo/orderservice:/data/db
 
   compass-orderservice:
     image: haohanyang/compass-web
