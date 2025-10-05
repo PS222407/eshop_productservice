@@ -62,6 +62,27 @@ data:
   AllowedHosts: "*"
 ---
 # -------------------------------
+# ConfigMap for orderservice settings
+# -------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orderservice-config
+data:
+  Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "orderservice-consumer-group"
+  Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
+  Jwt__Issuer: "yourCompanyIssuer.com"
+  Jwt__Audience: "yourCompanyAudience.com"
+  Jwt__ExpiresIn: "3600"
+  eshop_orderservice__ConnectionString: "mongodb://host.minikube.internal:27018"
+  eshop_orderservice__DatabaseName: "eshop_orderservice"
+  eshop_orderservice__OrdersCollectionName: "Orders"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+---
+# -------------------------------
 # userservice Deployment
 # -------------------------------
 apiVersion: apps/v1
@@ -300,6 +321,81 @@ spec:
           averageUtilization: 70
 ---
 # -------------------------------
+# orderservice Deployment
+# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderservice
+  template:
+    metadata:
+      labels:
+        app: orderservice
+    spec:
+      containers:
+        - name: orderservice
+          image: jensr22/eshop_orderservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+          envFrom:
+            - configMapRef:
+                name: orderservice-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+# -------------------------------
+# orderservice Service
+# -------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice-service
+spec:
+  selector:
+    app: orderservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+# -------------------------------
+# orderservice HPA
+# -------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: orderservice-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: orderservice-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+# -------------------------------
 # Ingress for path routing
 # -------------------------------
 apiVersion: networking.k8s.io/v1
@@ -329,5 +425,12 @@ spec:
             backend:
               service:
                 name: cartservice-service
+                port:
+                  number: 80
+          - path: /api/orderservice
+            pathType: Prefix
+            backend:
+              service:
+                name: orderservice-service
                 port:
                   number: 80

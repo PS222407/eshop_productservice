@@ -5,5 +5,7 @@ echo "userservice"
 cd ../eshop_userservice && git pull
 echo "productservice"
 cd ../eshop_productservice && git pull
+echo "orderservice"
+cd ../eshop_orderservice && git pull
 echo "svelte"
 cd ../eshop-svelte && git pull
