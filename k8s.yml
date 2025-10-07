@@ -50,7 +50,7 @@ kind: ConfigMap
 metadata:
   name: cartservice-config
 data:
-  ApiUrl: "http://productservice-service"
+  ApiUrlProductService: "http://productservice-service"
   Kafka__Server: "host.minikube.internal:9095"
   Kafka__GroupId: "cartservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
@@ -73,6 +73,7 @@ metadata:
   name: orderservice-config
 data:
   FrontendUrls: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
+  ApiUrlCartService: "http://cartservice-service"
   Kafka__Server: "host.minikube.internal:9095"
   Kafka__GroupId: "orderservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
