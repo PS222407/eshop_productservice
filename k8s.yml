@@ -31,6 +31,8 @@ metadata:
   name: userservice-config
 data:
   ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5433;Database=eshop_userservice;Username=postgres;Password=postgres;"
+  Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "userservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
