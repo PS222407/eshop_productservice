@@ -12,3 +12,6 @@ eshop_productservice.sln.DotSettings.user
 eshop_productservice.tar
 eshop_productservice/CSV/amazon_categories.csv
 eshop_productservice/CSV/amazon_products.csv
+data_*
+*service.tar
+coverage.xml

@@ -6,12 +6,13 @@ kind: ConfigMap
 metadata:
   name: productservice-config
 data:
-  FrontendUrl: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
+  FrontendUrls: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
   TypeSense__Host: "host.minikube.internal"
   TypeSense__ApiKey: "xyz"
   TypeSense__Protocol: "http"
   TypeSense__Port: "8108"
   Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "productservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
@@ -30,6 +31,8 @@ metadata:
   name: userservice-config
 data:
   ConnectionStrings__DefaultConnection: "Host=host.minikube.internal:5433;Database=eshop_userservice;Username=postgres;Password=postgres;"
+  Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "userservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"
@@ -47,7 +50,7 @@ kind: ConfigMap
 metadata:
   name: cartservice-config
 data:
-  ApiUrl: "http://productservice-service"
+  ApiUrlProductService: "http://productservice-service"
   Kafka__Server: "host.minikube.internal:9095"
   Kafka__GroupId: "cartservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
@@ -57,6 +60,29 @@ data:
   eshop_cartservice__ConnectionString: "mongodb://host.minikube.internal:27017"
   eshop_cartservice__DatabaseName: "eshop_cartservice"
   eshop_cartservice__CartItemsCollectionName: "CartItems"
+  Logging__LogLevel__Default: "Information"
+  Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+---
+# -------------------------------
+# ConfigMap for orderservice settings
+# -------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orderservice-config
+data:
+  FrontendUrls: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
+  ApiUrlCartService: "http://cartservice-service"
+  Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "orderservice-consumer-group"
+  Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
+  Jwt__Issuer: "yourCompanyIssuer.com"
+  Jwt__Audience: "yourCompanyAudience.com"
+  Jwt__ExpiresIn: "3600"
+  eshop_orderservice__ConnectionString: "mongodb://host.minikube.internal:27018"
+  eshop_orderservice__DatabaseName: "eshop_orderservice"
+  eshop_orderservice__OrdersCollectionName: "Orders"
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft.AspNetCore: "Warning"
   AllowedHosts: "*"
@@ -300,6 +326,81 @@ spec:
           averageUtilization: 70
 ---
 # -------------------------------
+# orderservice Deployment
+# -------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderservice-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orderservice
+  template:
+    metadata:
+      labels:
+        app: orderservice
+    spec:
+      containers:
+        - name: orderservice
+          image: jensr22/eshop_orderservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+          envFrom:
+            - configMapRef:
+                name: orderservice-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+# -------------------------------
+# orderservice Service
+# -------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice-service
+spec:
+  selector:
+    app: orderservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+# -------------------------------
+# orderservice HPA
+# -------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: orderservice-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: orderservice-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+---
+# -------------------------------
 # Ingress for path routing
 # -------------------------------
 apiVersion: networking.k8s.io/v1
@@ -329,5 +430,12 @@ spec:
             backend:
               service:
                 name: cartservice-service
+                port:
+                  number: 80
+          - path: /api/orderservice
+            pathType: Prefix
+            backend:
+              service:
+                name: orderservice-service
                 port:
                   number: 80

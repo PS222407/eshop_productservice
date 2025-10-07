@@ -59,6 +59,14 @@ public class ProductRepositoryPostgres(AppDbContext context) : IProductRepositor
         return await context.Products.Select(p => p.ToModel()).ToListAsync();
     }
 
+    public async Task DecreaseStockBy(string productId, int amount)
+    {
+        var product = await context.Products.FindAsync(new Guid(productId));
+        if (product == null) return;
+        product.Stock -= amount;
+        await context.SaveChangesAsync();
+    }
+
     private async Task<int> SearchCountAsync(SearchRequest searchRequest)
     {
         var query = BuildSearchQuery(searchRequest);

@@ -32,4 +32,9 @@ public class ProductService(IProductRepository repository, ISearchRepository sea
     {
         await searchRepository.ImportProducts();
     }
+
+    public async Task DecreaseStockBy(string productId, int amount)
+    {
+        await repository.DecreaseStockBy(productId, amount);
+    }
 }

@@ -43,7 +43,7 @@ public class SearchRepository : ISearchRepository
                 {
                     new(host, port, protocol)
                 };
-            }, false).BuildServiceProvider();
+            }).BuildServiceProvider();
         _typesenseClient = provider.GetService<ITypesenseClient>();
     }
 
