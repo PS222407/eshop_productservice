@@ -13,4 +13,6 @@ public interface IProductRepository
     public Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest);
 
     public Task<List<Product>> Get();
+
+    public Task DecreaseStockBy(string productId, int amount);
 }

@@ -15,4 +15,6 @@ public interface IProductService
     public Task CreateCollection();
 
     public Task ImportProducts();
+
+    public Task DecreaseStockBy(string productId, int amount);
 }

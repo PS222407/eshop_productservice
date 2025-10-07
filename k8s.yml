@@ -12,6 +12,7 @@ data:
   TypeSense__Protocol: "http"
   TypeSense__Port: "8108"
   Kafka__Server: "host.minikube.internal:9095"
+  Kafka__GroupId: "productservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
   Jwt__Issuer: "yourCompanyIssuer.com"
   Jwt__Audience: "yourCompanyAudience.com"

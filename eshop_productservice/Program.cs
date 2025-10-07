@@ -1,6 +1,7 @@
 using System.Text;
 using eshop_productservice.Data;
 using eshop_productservice.Interfaces;
+using eshop_productservice.Listeners;
 using eshop_productservice.Repositories;
 using eshop_productservice.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,6 +43,9 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ISearchRepository, SearchRepository>();
+builder.Services.AddTransient<IOrderListener, OrderListener>();
+
+builder.Services.AddHostedService<ConsumerService>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
