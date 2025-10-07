@@ -45,7 +45,8 @@ public class ConsumerService(IConfiguration configuration, IServiceScopeFactory 
                 var result = consumer.Consume(stoppingToken);
                 Console.WriteLine($"Consumed: {result.Message.Value}");
                 Console.WriteLine($"Consumed from topic: {result.Topic}");
-                await ProcessMessage(result.Topic, result.Message.Value);
+                Console.WriteLine($"Consumed offset: {result.Offset}");
+                _ = Task.Run(() => ProcessMessage(result.Topic, result.Message.Value), stoppingToken);
             }
             catch (OperationCanceledException)
             {
