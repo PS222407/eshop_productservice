@@ -6,7 +6,7 @@ kind: ConfigMap
 metadata:
   name: productservice-config
 data:
-  FrontendUrl: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
+  FrontendUrls: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
   TypeSense__Host: "host.minikube.internal"
   TypeSense__ApiKey: "xyz"
   TypeSense__Protocol: "http"
@@ -70,6 +70,7 @@ kind: ConfigMap
 metadata:
   name: orderservice-config
 data:
+  FrontendUrls: "http://localhost:5173,http://192.168.49.2:5173,http://host.minikube.internal:5173"
   Kafka__Server: "host.minikube.internal:9095"
   Kafka__GroupId: "orderservice-consumer-group"
   Jwt__Key: "YourSecretKeyForAuthenticationOfApplication"
