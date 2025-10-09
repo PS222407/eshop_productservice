@@ -8,7 +8,8 @@
             **/*Migrations/*.cs,
             **/*Data/*.cs,
             **/*DataModel/*.cs,
-            **/*Repositories/*.cs
+            **/*Repositories/*.cs,
+            **/Services/ConsumerService.cs
           </ExcludeByFile>
         </Configuration>
       </DataCollector>

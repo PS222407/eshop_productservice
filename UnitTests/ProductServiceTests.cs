@@ -33,7 +33,9 @@ public class ProductServiceTests
             Name = "Laptop",
             PriceInCents = 99999,
             StarsTimesTen = 46,
-            ImageUrl = "https://example.com/laptop.jpg"
+            ImageUrl = "https://example.com/laptop.jpg",
+            CategoryId = "68dd3a02-f6f8-832c-a715-2d9902a28601",
+            Stock = 99
         };
         _mockProductRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync(expectedProduct);
 
@@ -190,5 +192,46 @@ public class ProductServiceTests
         Assert.Empty(result.hits);
         Assert.Equal(0, result.found);
         _mockSearchRepository.Verify(r => r.Products(searchRequest), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateCollection_CallsCreateProductsCollectionOnce()
+    {
+        // Arrange
+        _mockSearchRepository.Setup(r => r.CreateProductsCollection()).Returns(Task.CompletedTask);
+
+        // Act
+        await _productService.CreateCollection();
+
+        // Assert
+        _mockSearchRepository.Verify(r => r.CreateProductsCollection(), Times.Once);
+    }
+
+    [Fact]
+    public async Task ImportProducts_CallsImportProductsOnce()
+    {
+        // Arrange
+        _mockSearchRepository.Setup(r => r.ImportProducts()).Returns(Task.CompletedTask);
+
+        // Act
+        await _productService.ImportProducts();
+
+        // Assert
+        _mockSearchRepository.Verify(r => r.ImportProducts(), Times.Once);
+    }
+
+    [Fact]
+    public async Task DecreaseStockBy_CallsRepositoryWithCorrectParameters()
+    {
+        // Arrange
+        const string productId = "68dd3a02-f6f8-832c-a715-2d9902a28601";
+        const int amount = 5;
+        _mockProductRepository.Setup(r => r.DecreaseStockBy(productId, amount)).Returns(Task.CompletedTask);
+
+        // Act
+        await _productService.DecreaseStockBy(productId, amount);
+
+        // Assert
+        _mockProductRepository.Verify(r => r.DecreaseStockBy(productId, amount), Times.Once);
     }
 }
