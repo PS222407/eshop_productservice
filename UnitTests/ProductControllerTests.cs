@@ -126,4 +126,34 @@ public class ProductControllerTests
         badRequestResult.Should().NotBeNull();
         badRequestResult.Value.Should().Be("At least one id must be provided.");
     }
+
+    [Fact]
+    public async Task CreateCollection_CallsService_AndReturnsOk()
+    {
+        // Arrange
+        _mockProductService.Setup(s => s.CreateCollection()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _controller.CreateCollection();
+
+        // Assert
+        var okResult = result as OkResult;
+        okResult.Should().NotBeNull();
+        _mockProductService.Verify(s => s.CreateCollection(), Times.Once);
+    }
+
+    [Fact]
+    public async Task ImportProducts_CallsService_AndReturnsOk()
+    {
+        // Arrange
+        _mockProductService.Setup(s => s.ImportProducts()).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _controller.ImportProducts();
+
+        // Assert
+        var okResult = result as OkResult;
+        okResult.Should().NotBeNull();
+        _mockProductService.Verify(s => s.ImportProducts(), Times.Once);
+    }
 }

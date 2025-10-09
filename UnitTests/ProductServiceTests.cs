@@ -33,7 +33,9 @@ public class ProductServiceTests
             Name = "Laptop",
             PriceInCents = 99999,
             StarsTimesTen = 46,
-            ImageUrl = "https://example.com/laptop.jpg"
+            ImageUrl = "https://example.com/laptop.jpg",
+            CategoryId = "68dd3a02-f6f8-832c-a715-2d9902a28601",
+            Stock = 99
         };
         _mockProductRepository.Setup(r => r.GetAsync(productId)).ReturnsAsync(expectedProduct);
 
@@ -191,7 +193,7 @@ public class ProductServiceTests
         Assert.Equal(0, result.found);
         _mockSearchRepository.Verify(r => r.Products(searchRequest), Times.Once);
     }
-    
+
     [Fact]
     public async Task CreateCollection_CallsCreateProductsCollectionOnce()
     {

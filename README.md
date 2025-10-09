@@ -50,7 +50,7 @@ CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvec
 ```bash
 jb cleanupcode ./eshop_cartservice.sln
 ```
-**Migrations**
+**Migrations**  
 Install dotnet-ef cli tools:
 ```bash
 dotnet tool install --global dotnet-ef
@@ -63,6 +63,21 @@ Run migrations:
 ```bash
 dotnet ef database update
 ```
+
+**Coverage Report**
+This command is onetime setup: 
+```bash
+dotnet tool install -g dotnet-reportgenerator-globaltool
+```
+Run coverage report:
+```bash
+dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat" && \
+mv ./xplat/*/coverage.cobertura.xml ./xplat/ 2>/dev/null || true
+```
+```bash
+reportgenerator -reports:xplat/coverage.cobertura.xml -targetdir:xplat/coverage-report -reporttypes:Html && xdg-open xplat/coverage-report/index.html
+```
+Or use the `coverage.sh` script
 
 # Setup For Production
 ```bash
