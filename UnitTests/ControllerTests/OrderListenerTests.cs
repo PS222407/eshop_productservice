@@ -2,7 +2,7 @@ using eshop_productservice.Interfaces;
 using eshop_productservice.Listeners;
 using Moq;
 
-namespace UnitTests;
+namespace UnitTests.ControllerTests;
 
 public class OrderListenerTests
 {
