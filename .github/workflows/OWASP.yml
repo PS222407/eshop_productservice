@@ -23,7 +23,7 @@ jobs:
         ports:
           - "5432:5432"
       kafka:
-        image: bitnami/kafka:3.9.0
+        image: docker.io/bitnami/kafka:3.9.0
         env:
           KAFKA_CFG_NODE_ID: 1
           KAFKA_PROCESS_ROLES: "broker,controller"
