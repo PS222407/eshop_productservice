@@ -23,7 +23,7 @@ jobs:
         ports:
           - 5432:5432
       kafka:
-        image: bitnami/kafka:latest
+        image: docker.io/bitnami/kafka:latest
         env:
           KAFKA_CFG_NODE_ID: 1
           KAFKA_CFG_PROCESS_ROLES: "broker,controller"
