@@ -15,15 +15,15 @@ jobs:
       ConnectionStrings__DefaultConnection: "Host=localhost:5432;Database=eshop_productservice;Username=postgres;Password=postgres;"
 
     services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_PASSWORD: postgres
-          PGDATA: /var/lib/postgresql/17/docker
-        ports:
-          - 5432:5432
+      # postgres:
+      #   image: postgres:17
+      #   env:
+      #     POSTGRES_PASSWORD: postgres
+      #     PGDATA: /var/lib/postgresql/17/docker
+      #   ports:
+      #     - 5432:5432
       kafka:
-        image: docker.io/bitnami/kafka:latest
+        image: registry-1.docker.io/bitnamisecure/kafka:3.9
         env:
           KAFKA_CFG_NODE_ID: 1
           KAFKA_CFG_PROCESS_ROLES: "broker,controller"
