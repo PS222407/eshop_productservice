@@ -1,0 +1,61 @@
+name: OWASP tests
+
+on:
+  push:
+    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      ConnectionStrings__DefaultConnection: "Host=localhost:5432;Database=eshop_productservice;Username=postgres;Password=postgres;"
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          PGDATA: /var/lib/postgresql/17/docker
+        ports:
+          - "5432:5432"
+      kafka:
+        image: jensr22/bitnami_kafka:3.9
+        env:
+          KAFKA_CFG_NODE_ID: 1
+          KAFKA_PROCESS_ROLES: "broker,controller"
+          KAFKA_CFG_LISTENERS: "INTERNAL://:9092,EXTERNAL_HOST://:9094,EXTERNAL_MINIKUBE://:9095,CONTROLLER://:9093"
+          KAFKA_CFG_ADVERTISED_LISTENERS: "INTERNAL://kafka:9092,EXTERNAL_HOST://localhost:9094,EXTERNAL_MINIKUBE://host.minikube.internal:9095"
+          KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL_HOST:PLAINTEXT,EXTERNAL_MINIKUBE:PLAINTEXT,CONTROLLER:PLAINTEXT"
+          KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
+          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+          KAFKA_CFG_NUM_PARTITIONS: 1
+          KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+          KAFKA_CFG_ALLOW_PLAINTEXT_LISTENER: yes
+        ports:
+          - "9092:9092"
+          - "9093:9093"
+          - "9094:9094"
+          - "9095:9095"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Run dotnet API
+        run: dotnet run --project eshop_productservice &
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.9.0
+        with:
+          target: 'http://0.0.0.0:5077/api/productservice/swagger/index.html'
