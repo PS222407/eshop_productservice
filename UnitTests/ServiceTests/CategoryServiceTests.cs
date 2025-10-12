@@ -6,7 +6,7 @@ using eshop_productservice.ViewModels;
 using FluentAssertions;
 using Moq;
 
-namespace UnitTests;
+namespace UnitTests.ServiceTests;
 
 public class CategoryServiceTests
 {

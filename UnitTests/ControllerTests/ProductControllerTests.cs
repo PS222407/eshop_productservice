@@ -8,7 +8,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace UnitTests;
+namespace UnitTests.ControllerTests;
 
 public class ProductControllerTests
 {
