@@ -22,8 +22,11 @@ public class SearchRepository : ISearchRepository
 
     private readonly ITypesenseClient? _typesenseClient;
 
-    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository)
+    private readonly IHostEnvironment _env;
+
+    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository, IHostEnvironment env)
     {
+        _env = env;
         var host = configuration.GetValue<string>("TypeSense:Host") ?? throw new InvalidOperationException();
         var apiKey = configuration.GetValue<string>("TypeSense:ApiKey") ?? throw new InvalidOperationException();
         var protocol = configuration.GetValue<string>("TypeSense:Protocol") ?? throw new InvalidOperationException();
@@ -92,8 +95,9 @@ public class SearchRepository : ISearchRepository
         return result;
     }
 
-    public async Task CreateProductsCollection()
+    private async Task CreateProductsCollection()
     {
+        if (!_env.IsDevelopment()) return;
         if (_typesenseClient is null) return;
         var schema = new Schema(
             "Products",
@@ -107,17 +111,28 @@ public class SearchRepository : ISearchRepository
                 new("ImgUrl", FieldType.String)
             });
 
-        var createCollectionResult = await _typesenseClient.CreateCollection(schema);
+        await _typesenseClient.CreateCollection(schema);
     }
 
     public async Task ImportProducts()
     {
+        if (!_env.IsDevelopment()) return;
         if (_typesenseClient is null) return;
+
+        try
+        {
+            await _typesenseClient.RetrieveCollection("Products");
+        }
+        catch (TypesenseApiNotFoundException)
+        {
+            await CreateProductsCollection();
+        }
 
         var products = await _productRepository.Get();
 
         var productSearchModels = products.Select(p => new ProductSearchModel
         {
+            id = p.Id,
             Id = p.Id,
             CategoryId = p.CategoryId,
             Name = p.Name,

@@ -23,11 +23,6 @@ public class ProductService(IProductRepository repository, ISearchRepository sea
         return await searchRepository.Products(searchRequest);
     }
 
-    public async Task CreateCollection()
-    {
-        await searchRepository.CreateProductsCollection();
-    }
-
     public async Task ImportProducts()
     {
         await searchRepository.ImportProducts();

@@ -87,9 +87,9 @@ var app = builder.Build();
 app.UseCors();
 
 // Add swagger endpoint
+app.UseSwagger(c => { c.RouteTemplate = "api/productservice/swagger/{documentname}/swagger.json"; });
 // if (app.Environment.IsDevelopment())
 // {
-app.UseSwagger(c => { c.RouteTemplate = "api/productservice/swagger/{documentname}/swagger.json"; });
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/api/productservice/swagger/v1/swagger.json", "E-Shop ProductService API V1");

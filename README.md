@@ -29,6 +29,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8
 ```
 
 ## Seed data
+1. **seed into database**  
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
@@ -39,11 +40,12 @@ docker cp eshop_productservice/CSV/Products.sql eshop-postgres-productservice:/P
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Products.sql
 ```
-
-## Create indexes
+Create indexes to make the search query faster
 ```sql
 CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
 ```
+2. **Import products form database to typesense searchengine**  
+Start application, open swagger and click on the ImportProducts endpoint.
 
 ## While developing
 **Run resharper:**
@@ -64,7 +66,7 @@ Run migrations:
 dotnet ef database update
 ```
 
-**Coverage Report**
+**Coverage Report**  
 This command is onetime setup: 
 ```bash
 dotnet tool install -g dotnet-reportgenerator-globaltool
@@ -78,6 +80,23 @@ mv ./xplat/*/coverage.cobertura.xml ./xplat/ 2>/dev/null || true
 reportgenerator -reports:xplat/coverage.cobertura.xml -targetdir:xplat/coverage-report -reporttypes:Html && xdg-open xplat/coverage-report/index.html
 ```
 Or use the `coverage.sh` script
+
+**OWASP ZAP scan**  
+Use `owasp.sh` or  
+Start application as Production ready
+```bash
+dotnet run --launch-profile http_production --project eshop_productservice/eshop_productservice.csproj
+```
+And run the owasp container
+```
+docker run --rm --network=host -v "$(pwd):/zap/wrk/:rw" \
+  ghcr.io/zaproxy/zaproxy:stable \
+  zap-api-scan.py \
+  -t http://localhost:5077/api/productservice/swagger/v1/swagger.json \
+  -f openapi \
+  -r zap-report.html \
+  -d
+```
 
 # Setup For Production
 ```bash
