@@ -5,8 +5,8 @@ permissions:
   pull-requests: write # for writing coverage to PR
 
 on:
-#  push:
-#    branches: [ "main", "develop" ]
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main", "develop" ]
 

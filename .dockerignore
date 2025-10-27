@@ -24,8 +24,4 @@
 LICENSE
 README.md
 
-data
-data_*
-data_kafka
-data_postgres_productservice
-data_postgres_userservice
+docker_data/

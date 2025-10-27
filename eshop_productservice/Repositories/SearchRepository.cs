@@ -16,14 +16,19 @@ public class SearchRepository : ISearchRepository
     private const string ProductsCollection = "Products";
 
     private readonly string _baseUrl;
+
+    private readonly IHostEnvironment _env;
+
     private readonly HttpClient _httpClient;
 
     private readonly IProductRepository _productRepository;
 
     private readonly ITypesenseClient? _typesenseClient;
 
-    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository)
+    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository,
+        IHostEnvironment env)
     {
+        _env = env;
         var host = configuration.GetValue<string>("TypeSense:Host") ?? throw new InvalidOperationException();
         var apiKey = configuration.GetValue<string>("TypeSense:ApiKey") ?? throw new InvalidOperationException();
         var protocol = configuration.GetValue<string>("TypeSense:Protocol") ?? throw new InvalidOperationException();
@@ -92,27 +97,19 @@ public class SearchRepository : ISearchRepository
         return result;
     }
 
-    public async Task CreateProductsCollection()
-    {
-        if (_typesenseClient is null) return;
-        var schema = new Schema(
-            "Products",
-            new List<Field>
-            {
-                new("Id", FieldType.String, false),
-                new("CategoryId", FieldType.String, true),
-                new("Name", FieldType.String, false, null, true),
-                new("PriceInCents", FieldType.Int32, false, null, true),
-                new("StarsTimesTen", FieldType.Int32, false, null, true),
-                new("ImgUrl", FieldType.String)
-            });
-
-        var createCollectionResult = await _typesenseClient.CreateCollection(schema);
-    }
-
     public async Task ImportProducts()
     {
+        if (!_env.IsDevelopment()) return;
         if (_typesenseClient is null) return;
+
+        try
+        {
+            await _typesenseClient.RetrieveCollection("Products");
+        }
+        catch (TypesenseApiNotFoundException)
+        {
+            await CreateProductsCollection();
+        }
 
         var products = await _productRepository.Get();
 
@@ -141,6 +138,25 @@ public class SearchRepository : ISearchRepository
                 Console.WriteLine(e);
             }
         }
+    }
+
+    private async Task CreateProductsCollection()
+    {
+        if (!_env.IsDevelopment()) return;
+        if (_typesenseClient is null) return;
+        var schema = new Schema(
+            "Products",
+            new List<Field>
+            {
+                new("Id", FieldType.String, false),
+                new("CategoryId", FieldType.String, true),
+                new("Name", FieldType.String, false, null, true),
+                new("PriceInCents", FieldType.Int32, false, null, true),
+                new("StarsTimesTen", FieldType.Int32, false, null, true),
+                new("ImgUrl", FieldType.String)
+            });
+
+        await _typesenseClient.CreateCollection(schema);
     }
 
     private static string ConvertToTypesenseFilter(string jsonString)

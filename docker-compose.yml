@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - PGDATA=/var/lib/postgresql/17/docker
     volumes:
-      - ./data_postgres_userservice:/var/lib/postgresql/17/docker
+      - ./docker_data/postgres_userservice:/var/lib/postgresql/17/docker
 
   postgres_productservice:
     image: postgres:17
@@ -21,9 +21,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       - PGDATA=/var/lib/postgresql/17/docker
     volumes:
-      - ./data_postgres_productservice:/var/lib/postgresql/17/docker
+      - ./docker_data/postgres_productservice:/var/lib/postgresql/17/docker
   
-  # login (system: PostgreSQL, server: postgres, username: postgres, password: postgres, database: postgres)
+  # login (system: PostgreSQL, server: eshop-postgres-productservice, username: postgres, password: postgres, database: postgres)
   adminer:
     image: adminer
     container_name: eshop-adminer
@@ -38,7 +38,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data_mongo/cartservice:/data/db
+      - ./docker_data/mongo/cartservice:/data/db
 
   compass-cartservice:
     image: haohanyang/compass-web
@@ -56,7 +56,7 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - ./data_mongo/orderservice:/data/db
+      - ./docker_data/mongo_orderservice:/data/db
 
   compass-orderservice:
     image: haohanyang/compass-web
@@ -101,7 +101,7 @@ services:
       - "9094:9094"
       - "9095:9095"
     volumes:
-      - ./data_kafka:/bitnami/kafka
+      - ./docker_data/kafka:/bitnami/kafka
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -129,7 +129,7 @@ services:
     container_name: eshop-productservice-typesense
     restart: on-failure
     volumes:
-      - ./typesense-data:/data
+      - ./docker_data/typesense-data:/data
     ports:
       - 8108:8108
     #For production remove interval this will default to 3600 seconds
@@ -140,6 +140,6 @@ services:
     container_name: eshop-productservice-typesense_dashboard
     restart: on-failure
     volumes:
-      - ./typesense-dashboard/config.json:/srv/config.json
+      - ./docker_data/typesense-dashboard/config.json:/srv/config.json
     ports:
       - 8188:80

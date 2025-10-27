@@ -8,14 +8,39 @@ cd eshop_productservice/
 ```
 Create persistant directory for kafka, this directory must be owned by 1001:1001.
 ```bash
-mkdir data_kafka && sudo chown -R 1001:1001 data_kafka
+mkdir -p docker_data/kafka && sudo chown -R 1001:1001 docker_data/kafka
 ```
 ```bash
 docker compose up -d  
 ```
+Run migrations:
+```bash
+dotnet ef database update --project eshop_productservice
+```
+Start app
 ```bash
 dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
+
+## Seed data
+1. **seed into database**  
+Find the Product.sql on server. This file was too big for github :(  
+You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
+```bash
+docker cp ~/Categories.sql eshop-postgres-productservice:/Categories.sql && \
+docker cp ~/Products.sql eshop-postgres-productservice:/Products.sql
+```
+```bash
+docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
+docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Products.sql
+```
+Create indexes to make the search query faster
+```sql
+CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
+```
+2. **Import products form database to typesense searchengine**  
+Start application, open swagger and click on the ImportProducts endpoint.
+
 ## Test JWT token
 This token is valid for 60 years:
 ```
@@ -28,29 +53,13 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8
 }
 ```
 
-## Seed data
-Find the Product.sql on server. This file was too big for github :(  
-You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
-```bash
-docker cp eshop_productservice/CSV/Categories.sql eshop-postgres-productservice:/Categories.sql && \
-docker cp eshop_productservice/CSV/Products.sql eshop-postgres-productservice:/Products.sql
-```
-```bash
-docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
-docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Products.sql
-```
-
-## Create indexes
-```sql
-CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
-```
-
 ## While developing
-**Run resharper:**
+### Run resharper  
+Shutdown running application and run  
 ```bash
-jb cleanupcode ./eshop_cartservice.sln
+./scripts/resharper.sh
 ```
-**Migrations**  
+### Migrations  
 Install dotnet-ef cli tools:
 ```bash
 dotnet tool install --global dotnet-ef
@@ -63,21 +72,25 @@ Run migrations:
 ```bash
 dotnet ef database update
 ```
-
-**Coverage Report**
+### Coverage Report  
 This command is onetime setup: 
 ```bash
 dotnet tool install -g dotnet-reportgenerator-globaltool
 ```
 Run coverage report:
 ```bash
-dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat" && \
-mv ./xplat/*/coverage.cobertura.xml ./xplat/ 2>/dev/null || true
+./scripts/coverage.sh
 ```
+
+### OWASP ZAP scan  
+Use `` or  
+Start application as Production ready
 ```bash
-reportgenerator -reports:xplat/coverage.cobertura.xml -targetdir:xplat/coverage-report -reporttypes:Html && xdg-open xplat/coverage-report/index.html
+./scripts/owasp.sh
 ```
-Or use the `coverage.sh` script
+
+### Unit tests
+For now I only used Rider's IDE UI
 
 # Setup For Production
 ```bash

@@ -7,6 +7,5 @@ namespace eshop_productservice.Interfaces;
 public interface ISearchRepository
 {
     public Task<PaginationDto<Product>> Products(SearchRequest searchRequest);
-    public Task CreateProductsCollection();
     public Task ImportProducts();
 }

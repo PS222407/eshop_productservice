@@ -12,8 +12,6 @@ public interface IProductService
 
     public Task<PaginationDto<Product>> SearchAsync(SearchRequest searchRequest);
 
-    public Task CreateCollection();
-
     public Task ImportProducts();
 
     public Task DecreaseStockBy(string productId, int amount);

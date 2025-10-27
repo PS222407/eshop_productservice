@@ -195,19 +195,6 @@ public class ProductServiceTests
     }
 
     [Fact]
-    public async Task CreateCollection_CallsCreateProductsCollectionOnce()
-    {
-        // Arrange
-        _mockSearchRepository.Setup(r => r.CreateProductsCollection()).Returns(Task.CompletedTask);
-
-        // Act
-        await _productService.CreateCollection();
-
-        // Assert
-        _mockSearchRepository.Verify(r => r.CreateProductsCollection(), Times.Once);
-    }
-
-    [Fact]
     public async Task ImportProducts_CallsImportProductsOnce()
     {
         // Arrange

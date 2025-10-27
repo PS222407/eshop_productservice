@@ -16,3 +16,4 @@ data_*
 *service.tar
 coverage.xml
 xplat
+docker_data/
