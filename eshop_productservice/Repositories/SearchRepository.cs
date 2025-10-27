@@ -16,15 +16,17 @@ public class SearchRepository : ISearchRepository
     private const string ProductsCollection = "Products";
 
     private readonly string _baseUrl;
+
+    private readonly IHostEnvironment _env;
+
     private readonly HttpClient _httpClient;
 
     private readonly IProductRepository _productRepository;
 
     private readonly ITypesenseClient? _typesenseClient;
 
-    private readonly IHostEnvironment _env;
-
-    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository, IHostEnvironment env)
+    public SearchRepository(IConfiguration configuration, IProductRepository productProductRepository,
+        IHostEnvironment env)
     {
         _env = env;
         var host = configuration.GetValue<string>("TypeSense:Host") ?? throw new InvalidOperationException();
@@ -95,25 +97,6 @@ public class SearchRepository : ISearchRepository
         return result;
     }
 
-    private async Task CreateProductsCollection()
-    {
-        if (!_env.IsDevelopment()) return;
-        if (_typesenseClient is null) return;
-        var schema = new Schema(
-            "Products",
-            new List<Field>
-            {
-                new("Id", FieldType.String, false),
-                new("CategoryId", FieldType.String, true),
-                new("Name", FieldType.String, false, null, true),
-                new("PriceInCents", FieldType.Int32, false, null, true),
-                new("StarsTimesTen", FieldType.Int32, false, null, true),
-                new("ImgUrl", FieldType.String)
-            });
-
-        await _typesenseClient.CreateCollection(schema);
-    }
-
     public async Task ImportProducts()
     {
         if (!_env.IsDevelopment()) return;
@@ -132,7 +115,6 @@ public class SearchRepository : ISearchRepository
 
         var productSearchModels = products.Select(p => new ProductSearchModel
         {
-            id = p.Id,
             Id = p.Id,
             CategoryId = p.CategoryId,
             Name = p.Name,
@@ -156,6 +138,25 @@ public class SearchRepository : ISearchRepository
                 Console.WriteLine(e);
             }
         }
+    }
+
+    private async Task CreateProductsCollection()
+    {
+        if (!_env.IsDevelopment()) return;
+        if (_typesenseClient is null) return;
+        var schema = new Schema(
+            "Products",
+            new List<Field>
+            {
+                new("Id", FieldType.String, false),
+                new("CategoryId", FieldType.String, true),
+                new("Name", FieldType.String, false, null, true),
+                new("PriceInCents", FieldType.Int32, false, null, true),
+                new("StarsTimesTen", FieldType.Int32, false, null, true),
+                new("ImgUrl", FieldType.String)
+            });
+
+        await _typesenseClient.CreateCollection(schema);
     }
 
     private static string ConvertToTypesenseFilter(string jsonString)

@@ -4,8 +4,6 @@ namespace eshop_productservice.SearchModels;
 
 public class ProductSearchModel
 {
-    [JsonPropertyName("id")] public string? id { get; set; }
-    
     [JsonPropertyName("Id")] public string Id { get; set; }
 
     [JsonPropertyName("CategoryId")] public string CategoryId { get; set; }

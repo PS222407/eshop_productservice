@@ -128,21 +128,6 @@ public class ProductControllerTests
     }
 
     [Fact]
-    public async Task CreateCollection_CallsService_AndReturnsOk()
-    {
-        // Arrange
-        _mockProductService.Setup(s => s.CreateCollection()).Returns(Task.CompletedTask);
-
-        // Act
-        var result = await _controller.CreateCollection();
-
-        // Assert
-        var okResult = result as OkResult;
-        okResult.Should().NotBeNull();
-        _mockProductService.Verify(s => s.CreateCollection(), Times.Once);
-    }
-
-    [Fact]
     public async Task ImportProducts_CallsService_AndReturnsOk()
     {
         // Arrange

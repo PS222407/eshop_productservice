@@ -54,9 +54,10 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8
 ```
 
 ## While developing
-**Run resharper:**
+### Run resharper  
+Shutdown running application and run  
 ```bash
-jb cleanupcode ./eshop_cartservice.sln
+./scripts/resharper.sh
 ```
 ### Migrations  
 Install dotnet-ef cli tools:
@@ -78,30 +79,18 @@ dotnet tool install -g dotnet-reportgenerator-globaltool
 ```
 Run coverage report:
 ```bash
-dotnet test --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory:"xplat" && \
-mv ./xplat/*/coverage.cobertura.xml ./xplat/ 2>/dev/null || true
+./scripts/coverage.sh
 ```
-```bash
-reportgenerator -reports:xplat/coverage.cobertura.xml -targetdir:xplat/coverage-report -reporttypes:Html && xdg-open xplat/coverage-report/index.html
-```
-Or use the `coverage.sh` script
 
 ### OWASP ZAP scan  
-Use `owasp.sh` or  
+Use `` or  
 Start application as Production ready
 ```bash
-dotnet run --launch-profile http_production --project eshop_productservice/eshop_productservice.csproj
+./scripts/owasp.sh
 ```
-And run the owasp container
-```
-docker run --rm --network=host -v "$(pwd):/zap/wrk/:rw" \
-  ghcr.io/zaproxy/zaproxy:stable \
-  zap-api-scan.py \
-  -t http://localhost:5077/api/productservice/swagger/v1/swagger.json \
-  -f openapi \
-  -r zap-report.html \
-  -d
-```
+
+### Unit tests
+For now I only used Rider's IDE UI
 
 # Setup For Production
 ```bash
