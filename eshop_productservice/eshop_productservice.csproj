@@ -37,7 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CSV\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 

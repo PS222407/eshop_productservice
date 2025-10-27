@@ -8,24 +8,18 @@ cd eshop_productservice/
 ```
 Create persistant directory for kafka, this directory must be owned by 1001:1001.
 ```bash
-mkdir data_kafka && sudo chown -R 1001:1001 data_kafka
+mkdir -p docker_data/kafka && sudo chown -R 1001:1001 docker_data/kafka
 ```
 ```bash
 docker compose up -d  
 ```
+Run migrations:
+```bash
+dotnet ef database update --project eshop_productservice
+```
+Start app
 ```bash
 dotnet run --project eshop_productservice/eshop_productservice.csproj
-```
-## Test JWT token
-This token is valid for 60 years:
-```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImRhZTU0NzNkLTI2MTYtNDlkMi1iMTY5LWM0NThkZTdmYjBjNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGdtYWlsLmNvbSIsInVzZXIiOiJ7XCJJZFwiOlwiZGFlNTQ3M2QtMjYxNi00OWQyLWIxNjktYzQ1OGRlN2ZiMGM2XCIsXCJFbWFpbFwiOlwiYWRtaW5AZ21haWwuY29tXCIsXCJSb2xlc1wiOltdfSIsImV4cCI6MzkwNzIxMDU5MSwiaXNzIjoieW91ckNvbXBhbnlJc3N1ZXIuY29tIiwiYXVkIjoieW91ckNvbXBhbnlBdWRpZW5jZS5jb20ifQ.XGAJDfiLjLZjRlNCUO7ylLwaykveBkNPZkzrwxOjN_E
-```
-```
-{
-  "email": "admin@gmail.com",
-  "password": "password"
-}
 ```
 
 ## Seed data
@@ -33,8 +27,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
-docker cp eshop_productservice/CSV/Categories.sql eshop-postgres-productservice:/Categories.sql && \
-docker cp eshop_productservice/CSV/Products.sql eshop-postgres-productservice:/Products.sql
+docker cp ~/Categories.sql eshop-postgres-productservice:/Categories.sql && \
+docker cp ~/Products.sql eshop-postgres-productservice:/Products.sql
 ```
 ```bash
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
@@ -47,12 +41,24 @@ CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvec
 2. **Import products form database to typesense searchengine**  
 Start application, open swagger and click on the ImportProducts endpoint.
 
+## Test JWT token
+This token is valid for 60 years:
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImRhZTU0NzNkLTI2MTYtNDlkMi1iMTY5LWM0NThkZTdmYjBjNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGdtYWlsLmNvbSIsInVzZXIiOiJ7XCJJZFwiOlwiZGFlNTQ3M2QtMjYxNi00OWQyLWIxNjktYzQ1OGRlN2ZiMGM2XCIsXCJFbWFpbFwiOlwiYWRtaW5AZ21haWwuY29tXCIsXCJSb2xlc1wiOltdfSIsImV4cCI6MzkwNzIxMDU5MSwiaXNzIjoieW91ckNvbXBhbnlJc3N1ZXIuY29tIiwiYXVkIjoieW91ckNvbXBhbnlBdWRpZW5jZS5jb20ifQ.XGAJDfiLjLZjRlNCUO7ylLwaykveBkNPZkzrwxOjN_E
+```
+```
+{
+  "email": "admin@gmail.com",
+  "password": "password"
+}
+```
+
 ## While developing
 **Run resharper:**
 ```bash
 jb cleanupcode ./eshop_cartservice.sln
 ```
-**Migrations**  
+### Migrations  
 Install dotnet-ef cli tools:
 ```bash
 dotnet tool install --global dotnet-ef
@@ -65,8 +71,7 @@ Run migrations:
 ```bash
 dotnet ef database update
 ```
-
-**Coverage Report**  
+### Coverage Report  
 This command is onetime setup: 
 ```bash
 dotnet tool install -g dotnet-reportgenerator-globaltool
@@ -81,7 +86,7 @@ reportgenerator -reports:xplat/coverage.cobertura.xml -targetdir:xplat/coverage-
 ```
 Or use the `coverage.sh` script
 
-**OWASP ZAP scan**  
+### OWASP ZAP scan  
 Use `owasp.sh` or  
 Start application as Production ready
 ```bash
