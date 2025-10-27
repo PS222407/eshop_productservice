@@ -34,6 +34,10 @@ docker cp ~/Products.sql eshop-postgres-productservice:/Products.sql
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Products.sql
 ```
+Set stock to 99 instead of 0
+```sql
+UPDATE "Products" SET "Stock" = '99' WHERE "Stock" = '0';
+```
 Create indexes to make the search query faster
 ```sql
 CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
