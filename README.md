@@ -120,7 +120,8 @@ Now you can access http://localhost:8080/swagger/index.html
 # k8s
 Prerequisites
 ```bash
-minikube addons enable ingress
+minikube addons enable ingress && \
+    minikube addons enable metrics-server
 ```
 Load local images in minikube that are not hosted in a registry  
 ```bash
