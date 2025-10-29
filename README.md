@@ -96,6 +96,11 @@ Start application as Production ready
 ### Unit tests
 For now I only used Rider's IDE UI
 
+### Load tests
+```bash
+cd k6loadtests && k6 run index.js
+```
+
 # Setup For Production
 ```bash
 git clone git@github.com:PS222407/eshop_productservice.git
