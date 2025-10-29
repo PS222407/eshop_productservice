@@ -4,9 +4,9 @@ import { Trend } from 'k6/metrics';
 
 export let options = {
     stages: [
-        { duration: '30s', target: 10 },  // ramp-up to 10 users
-        { duration: '1m', target: 10 },   // sustain 10 users
-        { duration: '30s', target: 0 },   // ramp-down
+        { duration: '30s', target: 10 },
+        { duration: '1m', target: 10 },
+        { duration: '30s', target: 0 },
     ],
 };
 
@@ -18,7 +18,6 @@ const categories = [
 const pages = [1, 2, 3, 4, 5];
 
 export default function () {
-    // Pick random query, category, and page for each request
     const q = queries[Math.floor(Math.random() * queries.length)];
     const category = categories[Math.floor(Math.random() * categories.length)];
     const page = pages[Math.floor(Math.random() * pages.length)];
