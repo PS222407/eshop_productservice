@@ -52,6 +52,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8
 ```
 ```
 {
+  "id": "dae5473d-2616-49d2-b169-c458de7fb0c6",
   "email": "admin@gmail.com",
   "password": "password"
 }

@@ -14,8 +14,21 @@ export const options = {
 const BASE_URL = 'http://192.168.49.2'; // k8s
 // const BASE_URL = 'http://0.0.0.0:5077'; // docker compose
 
-export default function (data) {
-    let res = http.get(BASE_URL + '/api/productservice/v1/Category', {
+export default function () {
+    http.get(BASE_URL + '/api/productservice/v1/Category', {
+        headers: { 'Content-Type': 'application/json' }
+    });
+    http.get(BASE_URL + '/api/cartservice/v1/Cart/dae5473d-2616-49d2-b169-c458de7fb0c6', {
+        headers: { 'Content-Type': 'application/json' }
+    });
+    http.get(BASE_URL + '/api/orderservice/v1/Order?page=1&per_page=15', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImRhZTU0NzNkLTI2MTYtNDlkMi1iMTY5LWM0NThkZTdmYjBjNiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGdtYWlsLmNvbSIsInVzZXIiOiJ7XCJJZFwiOlwiZGFlNTQ3M2QtMjYxNi00OWQyLWIxNjktYzQ1OGRlN2ZiMGM2XCIsXCJFbWFpbFwiOlwiYWRtaW5AZ21haWwuY29tXCIsXCJSb2xlc1wiOltdfSIsImV4cCI6MzkwNzIxMDU5MSwiaXNzIjoieW91ckNvbXBhbnlJc3N1ZXIuY29tIiwiYXVkIjoieW91ckNvbXBhbnlBdWRpZW5jZS5jb20ifQ.XGAJDfiLjLZjRlNCUO7ylLwaykveBkNPZkzrwxOjN_E'
+        }
+    });
+    let data = { email: 'admin@gmail.com', password: 'password' };
+    http.post(BASE_URL + '/api/userservice/Auth/Login', JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json' }
     });
 
