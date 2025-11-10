@@ -11,8 +11,8 @@ export const options = {
     ],
 };
 
-const BASE_URL = 'http://192.168.49.2'; // k8s
-// const BASE_URL = 'http://0.0.0.0:5077'; // docker compose
+// const BASE_URL = 'http://192.168.49.2'; // k8s
+const BASE_URL = 'http://0.0.0.0:5077'; // docker compose
 
 export default function () {
     http.get(BASE_URL + '/api/productservice/v1/Category', {

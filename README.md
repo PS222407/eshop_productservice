@@ -102,6 +102,11 @@ For now I only used Rider's IDE UI
 cd k6loadtests && k6 run index.js
 ```
 
+### Monitoring grafana
+Its running via docker, not combined with k8s. Run project locally.  
+Dashboard ID: 19194
+Dashboard URL: https://grafana.com/grafana/dashboards/17706-asp-net-otel-metrics/
+
 # Setup For Production
 ```bash
 git clone git@github.com:PS222407/eshop_productservice.git
