@@ -9,9 +9,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Grafana.Loki;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Service", "productservice")
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.GrafanaLoki(
+        builder.Configuration["Logging:Loki:Url"] ?? "http://localhost:3100",
+        labels: new List<LokiLabel>
+        {
+            new() { Key = "app", Value = "productservice" },
+            new() { Key = "env", Value = "dev" }
+        })
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // Add swagger
 builder.Services.AddEndpointsApiExplorer();

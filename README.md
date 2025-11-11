@@ -107,6 +107,10 @@ Its running via docker, not combined with k8s. Run project locally.
 Dashboard ID: 19194
 Dashboard URL: https://grafana.com/grafana/dashboards/17706-asp-net-otel-metrics/
 
+### Logs grafana
+Its running via docker, not combined with k8s. Run project locally.
+import dashboard load the json from `./grafana-log-dashboard.json`
+
 # Setup For Production
 ```bash
 git clone git@github.com:PS222407/eshop_productservice.git
