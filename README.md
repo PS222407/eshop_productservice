@@ -106,10 +106,12 @@ cd k6loadtests && k6 run index.js
 Its running via docker, not combined with k8s. Run project locally.  
 Dashboard ID: 19194
 Dashboard URL: https://grafana.com/grafana/dashboards/17706-asp-net-otel-metrics/
+![img_1.png](img_1.png)
 
 ### Logs grafana
 Its running via docker, not combined with k8s. Run project locally.
 import dashboard load the json from `./grafana-log-dashboard.json`
+![img.png](img.png)
 
 # Setup For Production
 ```bash
