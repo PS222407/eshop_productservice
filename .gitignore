@@ -17,3 +17,5 @@ data_*
 coverage.xml
 xplat
 docker_data/
+zap-report.html
+**/log-*.txt
