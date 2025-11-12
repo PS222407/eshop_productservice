@@ -97,17 +97,17 @@ services:
     ports:
       - "8084:8080"
 
-  mongo-express:
-    image: mongo-express
-    container_name: eshop-mongo-express
-    restart: on-failure
-    ports:
-      - 8085:8081
-    environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
-      ME_CONFIG_BASICAUTH_ENABLED: false
-#      ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
-#      ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
+#  mongo-express:
+#    image: mongo-express
+#    container_name: eshop-mongo-express
+#    restart: on-failure
+#    ports:
+#      - 8085:8081
+#    environment:
+#      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+#      ME_CONFIG_BASICAUTH_ENABLED: false
+##      ME_CONFIG_BASICAUTH_USERNAME: mongoexpressuser
+##      ME_CONFIG_BASICAUTH_PASSWORD: mongoexpresspass
 
   kafka:
     image: bitnami/kafka:3.9
