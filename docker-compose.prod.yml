@@ -90,7 +90,7 @@ services:
       - ./docker_data/postgres:/var/lib/postgresql/17/docker
 
   kafka:
-    image: bitnami/kafka:3.9
+    image: jensr22/bitnami_kafka:3.9
     container_name: eshop-kafka
     restart: unless-stopped
     environment:
