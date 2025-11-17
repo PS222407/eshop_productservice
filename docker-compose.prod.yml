@@ -15,7 +15,7 @@ services:
       - Jwt__RefreshTokenExpiresIn="2592000"
       - Logging__LogLevel__Default="Information"
       - Logging__LogLevel__Microsoft.AspNetCore="Warning"
-      - AllowedHosts="*"
+      - AllowedHosts=*
   cartservice:
     image: jensr22/eshop_cartservice
     restart: unless-stopped
@@ -34,7 +34,7 @@ services:
       - eshop_cartservice__CartItemsCollectionName="CartItems"
       - Logging__LogLevel__Default="Information"
       - Logging__LogLevel__Microsoft.AspNetCore="Warning"
-      - AllowedHosts="*"
+      - AllowedHosts=*
   orderservice:
     image: jensr22/eshop_orderservice
     restart: unless-stopped
@@ -54,7 +54,7 @@ services:
       - eshop_orderservice__OrdersCollectionName="Orders"
       - Logging__LogLevel__Default="Information"
       - Logging__LogLevel__Microsoft.AspNetCore="Warning"
-      - AllowedHosts="*"
+      - AllowedHosts=*
   productservice:
     image: jensr22/eshop_productservice
     restart: unless-stopped
@@ -75,7 +75,7 @@ services:
       - ConnectionStrings__DefaultConnection="Host=172.17.0.1:5433;Database=eshop_productservice;Username=postgres;Password=postgres;"
       - Logging__LogLevel__Default="Information"
       - Logging__LogLevel__Microsoft.AspNetCore="Warning"
-      - AllowedHosts="*"
+      - AllowedHosts=*
 
   postgres:
     image: postgres:17
