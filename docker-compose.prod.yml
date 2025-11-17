@@ -5,16 +5,16 @@ services:
     ports:
       - "5207:8080"
     environment:
-      - ConnectionStrings__DefaultConnection="Host=172.17.0.1:5433;Database=eshop_userservice;Username=postgres;Password=postgres;"
-      - Kafka__Server="kafka:9095"
-      - Kafka__GroupId="userservice-consumer-group"
-      - Jwt__Key="YourSecretKeyForAuthenticationOfApplication"
-      - Jwt__Issuer="yourCompanyIssuer.com"
-      - Jwt__Audience="yourCompanyAudience.com"
-      - Jwt__ExpiresIn="3600"
-      - Jwt__RefreshTokenExpiresIn="2592000"
-      - Logging__LogLevel__Default="Information"
-      - Logging__LogLevel__Microsoft.AspNetCore="Warning"
+      - ConnectionStrings__DefaultConnection=Host=172.17.0.1:5433;Database=eshop_userservice;Username=postgres;Password=postgres;
+      - Kafka__Server=kafka:9095
+      - Kafka__GroupId=userservice-consumer-group
+      - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
+      - Jwt__Issuer=yourCompanyIssuer.com
+      - Jwt__Audience=yourCompanyAudience.com
+      - Jwt__ExpiresIn=3600
+      - Jwt__RefreshTokenExpiresIn=2592000
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
   cartservice:
     image: jensr22/eshop_cartservice
@@ -22,18 +22,18 @@ services:
     ports:
       - "5074:8080"
     environment:
-      - ApiUrlProductService="http://productservice"
-      - Kafka__Server="kafka:9095"
-      - Kafka__GroupId="cartservice-consumer-group"
-      - Jwt__Key="YourSecretKeyForAuthenticationOfApplication"
-      - Jwt__Issuer="yourCompanyIssuer.com"
-      - Jwt__Audience="yourCompanyAudience.com"
-      - Jwt__ExpiresIn="3600"
-      - eshop_cartservice__ConnectionString="mongodb://172.17.0.1:27017"
-      - eshop_cartservice__DatabaseName="eshop_cartservice"
-      - eshop_cartservice__CartItemsCollectionName="CartItems"
-      - Logging__LogLevel__Default="Information"
-      - Logging__LogLevel__Microsoft.AspNetCore="Warning"
+      - ApiUrlProductService=http://productservice
+      - Kafka__Server=kafka:9095
+      - Kafka__GroupId=cartservice-consumer-group
+      - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
+      - Jwt__Issuer=yourCompanyIssuer.com
+      - Jwt__Audience=yourCompanyAudience.com
+      - Jwt__ExpiresIn=3600
+      - eshop_cartservice__ConnectionString=mongodb://172.17.0.1:27017
+      - eshop_cartservice__DatabaseName=eshop_cartservice
+      - eshop_cartservice__CartItemsCollectionName=CartItems
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
   orderservice:
     image: jensr22/eshop_orderservice
@@ -41,19 +41,19 @@ services:
     ports:
       - "5278:8080"
     environment:
-      - FrontendUrls="http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl"
-      - ApiUrlCartService="http://cartservice"
-      - Kafka__Server="kafka:9095"
-      - Kafka__GroupId="orderservice-consumer-group"
-      - Jwt__Key="YourSecretKeyForAuthenticationOfApplication"
-      - Jwt__Issuer="yourCompanyIssuer.com"
-      - Jwt__Audience="yourCompanyAudience.com"
-      - Jwt__ExpiresIn="3600"
-      - eshop_orderservice__ConnectionString="mongodb://172.17.0.1:27018"
-      - eshop_orderservice__DatabaseName="eshop_orderservice"
-      - eshop_orderservice__OrdersCollectionName="Orders"
-      - Logging__LogLevel__Default="Information"
-      - Logging__LogLevel__Microsoft.AspNetCore="Warning"
+      - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
+      - ApiUrlCartService=http://cartservice
+      - Kafka__Server=kafka:9095
+      - Kafka__GroupId=orderservice-consumer-group
+      - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
+      - Jwt__Issuer=yourCompanyIssuer.com
+      - Jwt__Audience=yourCompanyAudience.com
+      - Jwt__ExpiresIn=3600
+      - eshop_orderservice__ConnectionString=mongodb://172.17.0.1:27018
+      - eshop_orderservice__DatabaseName=eshop_orderservice
+      - eshop_orderservice__OrdersCollectionName=Orders
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
   productservice:
     image: jensr22/eshop_productservice
@@ -61,20 +61,20 @@ services:
     ports:
       - "5077:8080"
     environment:
-      - FrontendUrls="http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl"
-      - TypeSense__Host="172.17.0.1"
-      - TypeSense__ApiKey="xyz"
-      - TypeSense__Protocol="http"
-      - TypeSense__Port="8108"
-      - Kafka__Server="kafka:9095"
-      - Kafka__GroupId="productservice-consumer-group"
-      - Jwt__Key="YourSecretKeyForAuthenticationOfApplication"
-      - Jwt__Issuer="yourCompanyIssuer.com"
-      - Jwt__Audience="yourCompanyAudience.com"
-      - Jwt__ExpiresIn="3600"
-      - ConnectionStrings__DefaultConnection="Host=172.17.0.1:5433;Database=eshop_productservice;Username=postgres;Password=postgres;"
-      - Logging__LogLevel__Default="Information"
-      - Logging__LogLevel__Microsoft.AspNetCore="Warning"
+      - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
+      - TypeSense__Host=172.17.0.1
+      - TypeSense__ApiKey=xyz
+      - TypeSense__Protocol=http
+      - TypeSense__Port=8108
+      - Kafka__Server=kafka:9095
+      - Kafka__GroupId=productservice-consumer-group
+      - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
+      - Jwt__Issuer=yourCompanyIssuer.com
+      - Jwt__Audience=yourCompanyAudience.com
+      - Jwt__ExpiresIn=3600
+      - ConnectionStrings__DefaultConnection=Host=172.17.0.1:5433;Database=eshop_productservice;Username=postgres;Password=postgres;
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
 
   postgres:
