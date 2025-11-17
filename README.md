@@ -23,7 +23,11 @@ dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
 
 ## Seed data
-1. **seed into database**  
+1. Create database in psql
+```sql
+CREATE DATABASE eshop_productservice;
+```
+2. **seed into database**  
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
