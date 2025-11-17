@@ -131,6 +131,10 @@ docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8
 Now you can access http://localhost:8080/swagger/index.html  
 
 Deploy on server using the docker compose file `./docker-compose-prod.yml`  
+But first follow these steps:  
+```bash
+mkdir -p docker_data_prod/kafka && sudo chown -R 1001:1001 docker_data_prod/kafka
+```
 ```bash
 docker compose -p eshop-prod -f docker-compose.prod.yml up -d
 ```

@@ -87,7 +87,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - PGDATA=/var/lib/postgresql/17/docker
     volumes:
-      - ./docker_data/postgres:/var/lib/postgresql/17/docker
+      - ./docker_data_prod/postgres:/var/lib/postgresql/17/docker
 
   kafka:
     image: jensr22/bitnami_kafka:3.9
@@ -111,7 +111,7 @@ services:
       - "9094:9094"
       - "9095:9095"
     volumes:
-      - ./docker_data/kafka:/bitnami/kafka
+      - ./docker_data_prod/kafka:/bitnami/kafka
 
 #  nginx:
 #    image: nginx:latest
@@ -127,7 +127,7 @@ services:
     container_name: eshop-productservice-typesense
     restart: unless-stopped
     volumes:
-      - ./docker_data/typesense-data:/data
+      - ./docker_data_prod/typesense-data:/data
     ports:
       - 8108:8108
     #For production remove interval this will default to 3600 seconds
