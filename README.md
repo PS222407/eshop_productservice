@@ -114,6 +114,7 @@ import dashboard load the json from `./grafana-log-dashboard.json`
 ![img.png](img.png)
 
 # Setup For Production
+Build docker image
 ```bash
 git clone git@github.com:PS222407/eshop_productservice.git
 ```
@@ -121,18 +122,18 @@ git clone git@github.com:PS222407/eshop_productservice.git
 cd eshop_productservice/  
 ```
 ```bash
-docker network create eshop-network
-```
-```bash
-docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.0
-```
-```bash
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
+Test run docker container:
 ```bash
 docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
 ```
 Now you can access http://localhost:8080/swagger/index.html  
+
+Deploy on server using the docker compose file `./docker-compose-prod.yml`  
+```bash
+docker compose -p eshop-prod -f docker-compose.prod.yml up -d
+```
 
 # k8s
 Prerequisites

@@ -3,7 +3,7 @@ services:
     image: jensr22/eshop_userservice
     restart: unless-stopped
     ports:
-      - "5207:5207"
+      - "5207:8080"
     environment:
       - ConnectionStrings__DefaultConnection="Host=172.17.0.1:5433;Database=eshop_userservice;Username=postgres;Password=postgres;"
       - Kafka__Server="kafka:9095"
@@ -20,7 +20,7 @@ services:
     image: jensr22/eshop_cartservice
     restart: unless-stopped
     ports:
-      - "5074:5074"
+      - "5074:8080"
     environment:
       - ApiUrlProductService="http://productservice"
       - Kafka__Server="kafka:9095"
@@ -39,7 +39,7 @@ services:
     image: jensr22/eshop_orderservice
     restart: unless-stopped
     ports:
-      - "5278:5278"
+      - "5278:8080"
     environment:
       - FrontendUrls="http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl"
       - ApiUrlCartService="http://cartservice"
@@ -59,7 +59,7 @@ services:
     image: jensr22/eshop_productservice
     restart: unless-stopped
     ports:
-      - "5077:5077"
+      - "5077:8080"
     environment:
       - FrontendUrls="http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl"
       - TypeSense__Host="172.17.0.1"
