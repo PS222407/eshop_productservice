@@ -23,7 +23,11 @@ dotnet run --project eshop_productservice/eshop_productservice.csproj
 ```
 
 ## Seed data
-1. **seed into database**  
+1. Create database in psql
+```sql
+CREATE DATABASE eshop_productservice;
+```
+2. **seed into database**  
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
@@ -114,6 +118,7 @@ import dashboard load the json from `./grafana-log-dashboard.json`
 ![img.png](img.png)
 
 # Setup For Production
+Build docker image
 ```bash
 git clone git@github.com:PS222407/eshop_productservice.git
 ```
@@ -121,18 +126,22 @@ git clone git@github.com:PS222407/eshop_productservice.git
 cd eshop_productservice/  
 ```
 ```bash
-docker network create eshop-network
-```
-```bash
-docker run --name eshop-mongo --network eshop-network -p 27017:27017 -d mongo:8.0
-```
-```bash
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
+Test run docker container:
 ```bash
 docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
 ```
 Now you can access http://localhost:8080/swagger/index.html  
+
+Deploy on server using the docker compose file `./docker-compose-prod.yml`  
+But first follow these steps:  
+```bash
+mkdir -p docker_data_prod/kafka && sudo chown -R 1001:1001 docker_data_prod/kafka
+```
+```bash
+docker compose -p eshop-prod -f docker-compose.prod.yml up -d
+```
 
 # k8s
 Prerequisites
