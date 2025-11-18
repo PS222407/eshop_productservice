@@ -30,7 +30,7 @@ services:
     ports:
       - "5074:8080"
     environment:
-      - ApiUrlProductService=http://productservice
+      - ApiUrlProductService=http://productservice:8080
       - Kafka__Server=kafka:9092
       - Kafka__GroupId=cartservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
@@ -50,7 +50,7 @@ services:
       - "5278:8080"
     environment:
       - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
-      - ApiUrlCartService=http://cartservice
+      - ApiUrlCartService=http://cartservice:8080
       - Kafka__Server=kafka:9092
       - Kafka__GroupId=orderservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
