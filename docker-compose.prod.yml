@@ -1,12 +1,20 @@
 services:
+  svelte:
+    image: jensr22/eshop_svelte
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - API_URL=https://eshop.jensramakers.nl
+      - PUBLIC_API_URL=https://eshop.jensramakers.nl
   userservice:
     image: jensr22/eshop_userservice
     restart: unless-stopped
     ports:
       - "5207:8080"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=172.17.0.1:5433;Database=eshop_userservice;Username=postgres;Password=postgres;
-      - Kafka__Server=kafka:9095
+      - ConnectionStrings__DefaultConnection=Host=postgres:5432;Database=eshop_userservice;Username=postgres;Password=postgres;
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=userservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -22,14 +30,14 @@ services:
     ports:
       - "5074:8080"
     environment:
-      - ApiUrlProductService=http://productservice
-      - Kafka__Server=kafka:9095
+      - ApiUrlProductService=http://productservice:8080
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=cartservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
       - Jwt__Audience=yourCompanyAudience.com
       - Jwt__ExpiresIn=3600
-      - eshop_cartservice__ConnectionString=mongodb://172.17.0.1:27017
+      - eshop_cartservice__ConnectionString=mongodb://mongodb:27017
       - eshop_cartservice__DatabaseName=eshop_cartservice
       - eshop_cartservice__CartItemsCollectionName=CartItems
       - Logging__LogLevel__Default=Information
@@ -42,14 +50,14 @@ services:
       - "5278:8080"
     environment:
       - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
-      - ApiUrlCartService=http://cartservice
-      - Kafka__Server=kafka:9095
+      - ApiUrlCartService=http://cartservice:8080
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=orderservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
       - Jwt__Audience=yourCompanyAudience.com
       - Jwt__ExpiresIn=3600
-      - eshop_orderservice__ConnectionString=mongodb://172.17.0.1:27018
+      - eshop_orderservice__ConnectionString=mongodb://mongodb:27017
       - eshop_orderservice__DatabaseName=eshop_orderservice
       - eshop_orderservice__OrdersCollectionName=Orders
       - Logging__LogLevel__Default=Information
@@ -62,24 +70,24 @@ services:
       - "5077:8080"
     environment:
       - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
-      - TypeSense__Host=172.17.0.1
+      - TypeSense__Host=typesense
       - TypeSense__ApiKey=xyz
       - TypeSense__Protocol=http
       - TypeSense__Port=8108
-      - Kafka__Server=kafka:9095
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=productservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
       - Jwt__Audience=yourCompanyAudience.com
       - Jwt__ExpiresIn=3600
-      - ConnectionStrings__DefaultConnection=Host=172.17.0.1:5433;Database=eshop_productservice;Username=postgres;Password=postgres;
+      - ConnectionStrings__DefaultConnection=Host=postgres:5432;Database=eshop_productservice;Username=postgres;Password=postgres;
       - Logging__LogLevel__Default=Information
       - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
+#      - ASPNETCORE_ENVIRONMENT=Development
 
   postgres:
     image: postgres:17
-    container_name: eshop-postgres
     restart: unless-stopped
     ports:
       - "5433:5432"
@@ -89,9 +97,16 @@ services:
     volumes:
       - ./docker_data_prod/postgres:/var/lib/postgresql/17/docker
 
+  mongodb:
+    image: mongo:8.0
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./docker_data_prod/mongo:/data/db
+
   kafka:
     image: jensr22/bitnami_kafka:3.9
-    container_name: eshop-kafka
     restart: unless-stopped
     environment:
       - KAFKA_CFG_NODE_ID=1
@@ -115,7 +130,6 @@ services:
 
 #  nginx:
 #    image: nginx:latest
-#    container_name: eshop-nginx-proxy
 #    restart: unless-stopped
 #    ports:
 #      - "81:80"
@@ -124,7 +138,6 @@ services:
   
   typesense:
     image: typesense/typesense:29.0
-    container_name: eshop-productservice-typesense
     restart: unless-stopped
     volumes:
       - ./docker_data_prod/typesense-data:/data

@@ -44,7 +44,7 @@ UPDATE "Products" SET "Stock" = '99' WHERE "Stock" = '0';
 ```
 Create indexes to make the search query faster
 ```sql
-CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"))
+CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"));
 ```
 2. **Import products form database to typesense searchengine**  
 Start application, open swagger and click on the ImportProducts endpoint.
@@ -128,6 +128,9 @@ cd eshop_productservice/
 ```bash
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
+```bash
+docker image push jensr22/eshop_productservice:latest
+```
 Test run docker container:
 ```bash
 docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
@@ -142,6 +145,8 @@ mkdir -p docker_data_prod/kafka && sudo chown -R 1001:1001 docker_data_prod/kafk
 ```bash
 docker compose -p eshop-prod -f docker-compose.prod.yml up -d
 ```
+Run migrations via their endpoint  
+Run seeder as described in the development section.
 
 # k8s
 Prerequisites
