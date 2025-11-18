@@ -6,7 +6,7 @@ services:
       - "5207:8080"
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres:5432;Database=eshop_userservice;Username=postgres;Password=postgres;
-      - Kafka__Server=kafka:9095
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=userservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -23,7 +23,7 @@ services:
       - "5074:8080"
     environment:
       - ApiUrlProductService=http://productservice
-      - Kafka__Server=kafka:9095
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=cartservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -43,7 +43,7 @@ services:
     environment:
       - FrontendUrls=http://localhost:5173,http://172.17.0.1:5173,http://eshop.jensramakers.nl,https://eshop.jensramakers.nl
       - ApiUrlCartService=http://cartservice
-      - Kafka__Server=kafka:9095
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=orderservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -66,7 +66,7 @@ services:
       - TypeSense__ApiKey=xyz
       - TypeSense__Protocol=http
       - TypeSense__Port=8108
-      - Kafka__Server=kafka:9094
+      - Kafka__Server=kafka:9092
       - Kafka__GroupId=productservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -76,7 +76,7 @@ services:
       - Logging__LogLevel__Default=Information
       - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
-      - ASPNETCORE_ENVIRONMENT=Development
+#      - ASPNETCORE_ENVIRONMENT=Development
 
   postgres:
     image: postgres:17

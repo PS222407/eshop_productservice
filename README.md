@@ -128,6 +128,9 @@ cd eshop_productservice/
 ```bash
 docker build -t jensr22/eshop_productservice:latest -f ./eshop_productservice/Dockerfile .
 ```
+```bash
+docker image push jensr22/eshop_productservice:latest
+```
 Test run docker container:
 ```bash
 docker run --name eshop_productservice --network eshop-network -p 8080:8080 -p 8081:8081 -d jensr22/eshop_productservice:latest
