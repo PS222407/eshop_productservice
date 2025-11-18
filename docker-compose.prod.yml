@@ -66,7 +66,7 @@ services:
       - TypeSense__ApiKey=xyz
       - TypeSense__Protocol=http
       - TypeSense__Port=8108
-      - Kafka__Server=kafka:9095
+      - Kafka__Server=kafka:9094
       - Kafka__GroupId=productservice-consumer-group
       - Jwt__Key=YourSecretKeyForAuthenticationOfApplication
       - Jwt__Issuer=yourCompanyIssuer.com
@@ -76,6 +76,7 @@ services:
       - Logging__LogLevel__Default=Information
       - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
+      - ASPNETCORE_ENVIRONMENT=Development
 
   postgres:
     image: postgres:17
