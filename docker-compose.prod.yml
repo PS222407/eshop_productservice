@@ -95,7 +95,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - PGDATA=/var/lib/postgresql/17/docker
     volumes:
-      - ./docker_data_prod/postgres:/var/lib/postgresql/17/docker
+      - /mnt/4tb1/eshop_docker_data_prod/postgres:/var/lib/postgresql/17/docker
 
   mongodb:
     image: mongo:8.0
@@ -103,7 +103,7 @@ services:
     ports:
       - "27018:27017"
     volumes:
-      - ./docker_data_prod/mongo:/data/db
+      - /mnt/4tb1/eshop_docker_data_prod/mongo:/data/db
 
   kafka:
     image: jensr22/bitnami_kafka:3.9
@@ -126,7 +126,7 @@ services:
       - "9094:9094"
       - "9095:9095"
     volumes:
-      - ./docker_data_prod/kafka:/bitnami/kafka
+      - /mnt/4tb1/eshop_docker_data_prod/kafka:/bitnami/kafka
 
 #  nginx:
 #    image: nginx:latest
@@ -140,7 +140,7 @@ services:
     image: typesense/typesense:29.0
     restart: unless-stopped
     volumes:
-      - ./docker_data_prod/typesense-data:/data
+      - /mnt/4tb1/eshop_docker_data_prod/typesense-data:/data
     ports:
       - 8108:8108
     #For production remove interval this will default to 3600 seconds
