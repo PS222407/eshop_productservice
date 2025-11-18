@@ -1,4 +1,12 @@
 services:
+  svelte:
+    image: jensr22/eshop_svelte
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - API_URL=http://eshop.jensramakers.nl
+      - PUBLIC_API_URL=http://eshop.jensramakers.nl
   userservice:
     image: jensr22/eshop_userservice
     restart: unless-stopped
