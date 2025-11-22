@@ -134,7 +134,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 1G
 
 #  nginx:
 #    image: nginx:latest
