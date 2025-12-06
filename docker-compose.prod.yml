@@ -85,6 +85,10 @@ services:
       - Logging__LogLevel__Microsoft.AspNetCore=Warning
       - AllowedHosts=*
 #      - ASPNETCORE_ENVIRONMENT=Development
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
   postgres:
     image: postgres:17
@@ -127,6 +131,10 @@ services:
       - "9095:9095"
     volumes:
       - /mnt/4tb1/eshop_docker_data_prod/kafka:/bitnami/kafka
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
 #  nginx:
 #    image: nginx:latest
@@ -145,3 +153,7 @@ services:
       - 8108:8108
     #For production remove interval this will default to 3600 seconds
     command: '--data-dir /data --api-key=xyz --enable-cors --cors-domains=http://localhost:8188 --enable-search-analytics=true --analytics-dir=/data/analytics --analytics-flush-interval=60'
+    deploy:
+      resources:
+        limits:
+          memory: 1G
