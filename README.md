@@ -47,7 +47,7 @@ Create indexes to make the search query faster
 CREATE INDEX CONCURRENTLY idx_products_name_gin ON "Products" USING gin(to_tsvector('english', "Name"));
 ```
 2. **Import products form database to typesense searchengine**  
-Start application, open swagger and click on the ImportProducts endpoint.
+Start application, open swagger and click on the ImportProducts endpoint. **MAKE SURE TO SET APPLICATION IN DEVELOPMENT MODE!!!**
 
 ## Test JWT token
 This token is valid for 60 years:
