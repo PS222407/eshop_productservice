@@ -5,7 +5,7 @@ services:
     ports:
       - "3002:3000"
     environment:
-      - API_URL=https://utterly-guided-impala.ngrok-free.app/
+      - API_URL=https://utterly-guided-impala.ngrok-free.app
       - PUBLIC_API_URL=https://utterly-guided-impala.ngrok-free.app
   userservice:
     image: jensr22/eshop_userservice
