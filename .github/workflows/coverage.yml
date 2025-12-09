@@ -41,7 +41,7 @@ jobs:
           targetdir: 'coveragereport'
           reporttypes: 'HtmlInline;MarkdownSummaryGithub;Cobertura'
           verbosity: 'Info'
-          title: 'AuctionAPI Coverage Report'
+          title: 'Coverage Report'
           tag: '${{ github.run_number }}_${{ github.run_id }}'
           toolpath: 'reportgeneratortool'
 
