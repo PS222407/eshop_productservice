@@ -1,3 +1,14 @@
+# Prerequisites
+Kafka bitnami dropped its free docker images. I have not fixed it, when I do search for `// TODO: fix kafka` to enable kafka in code again.  
+Expect the application to not work well until fixed.
+
+- Install dotnet 9 (https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-install?tabs=dotnet10&pivots=os-linux-ubuntu-2604)
+- Install dotnet ef tools (https://learn.microsoft.com/en-us/ef/core/cli/dotnet) and add to path
+```bash
+echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bashrc
+source ~/.bashrc
+```
+
 # Setup For Development
 If you use windows, please run inside WSL  
 ```bash
@@ -24,15 +35,30 @@ dotnet run --project eshop_productservice/eshop_productservice.csproj
 
 ## Seed data
 1. Create database in psql
+```bash
+docker compose exec postgres_productservice bash
+```
+```bash
+psql -U postgres
+```
+Show all existing databases
+```bash
+\l
+```
+If not already exists
 ```sql
 CREATE DATABASE eshop_productservice;
+```
+Connect to database
+```bash
+\c eshop_productservice
 ```
 2. **seed into database**  
 Find the Product.sql on server. This file was too big for github :(  
 You can import using adminer web ui. For the big Products.sql file you must do it in terminal.  
 ```bash
-docker cp ~/Categories.sql eshop-postgres-productservice:/Categories.sql && \
-docker cp ~/Products.sql eshop-postgres-productservice:/Products.sql
+docker cp ~/Downloads/Categories_1.sql eshop-postgres-productservice:/Categories.sql && \
+docker cp ~/Downloads/Products_1.sql eshop-postgres-productservice:/Products.sql
 ```
 ```bash
 docker exec -it eshop-postgres-productservice psql -U postgres -d eshop_productservice -f /Categories.sql && \

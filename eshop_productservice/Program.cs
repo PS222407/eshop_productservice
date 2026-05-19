@@ -66,7 +66,8 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ISearchRepository, SearchRepository>();
 builder.Services.AddTransient<IOrderListener, OrderListener>();
 
-builder.Services.AddHostedService<ConsumerService>();
+// TODO: fix kafka
+// builder.Services.AddHostedService<ConsumerService>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
